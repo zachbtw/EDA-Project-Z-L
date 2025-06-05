@@ -9,3 +9,5 @@ wwc_passes_2 <- wwc_passes |>
 
 wwc_passes_2[is.na(wwc_passes_2)] <- FALSE
 
+wwc_passes[11:23] <- wwc_passes_2[1:13]
+
