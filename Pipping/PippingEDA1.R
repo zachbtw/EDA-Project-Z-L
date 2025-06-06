@@ -8,7 +8,7 @@ library(tidyverse)
 install.packages("janitor")
 wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
 
-# Cleaning the names
+# Cleaning the names 
 wwc_passes <- wwc_passes |> 
   janitor::clean_names()
 
@@ -28,4 +28,4 @@ wwc_passes_3 <- wwc_passes |>
 
 wwc_passes[28] <- wwc_passes_3
 
-c(1, 2, 3, 4, 5, 6, 6)
+c(1, 2, 3, 4, 5, 6, 6) 
