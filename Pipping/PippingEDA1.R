@@ -26,8 +26,12 @@ wwc_passes_3 <- wwc_passes |>
   mutate(pass_outcome_name = ifelse(is.na(pass_outcome_name == TRUE), 
                                     "Complete", pass_outcome_name))
 
-names(wwc_passes[11:23]) <- c("switch", "aerial_won", "cross", "through_ball")
+names(wwc_passes[11:23]) <- c("switch", "aerial_won", "cross", "through_ball",
+                              "shot_assist", "outswinging", "straight", "inswinging",
+                              "goal_assist", "cut_back", "no_touch", "deflected",
+                              "miscommunication")
 
+wwc_passes
 wwc_passes[28] <- wwc_passes_3
 sum(rowSums(wwc_passes[11:23]) == 0) # 52347
 sum(rowSums(wwc_passes[11:23]) == 1) # 3629
