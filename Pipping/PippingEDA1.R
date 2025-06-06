@@ -26,6 +26,15 @@ wwc_passes_3 <- wwc_passes |>
   mutate(pass_outcome_name = ifelse(is.na(pass_outcome_name == TRUE), 
                                     "Complete", pass_outcome_name))
 
+names(wwc_passes[11:23]) <- c("switch", "aerial_won", "cross", "through_ball")
+
 wwc_passes[28] <- wwc_passes_3
+sum(rowSums(wwc_passes[11:23]) == 0) # 52347
+sum(rowSums(wwc_passes[11:23]) == 1) # 3629
+sum(rowSums(wwc_passes[11:23]) == 2) # 637
+sum(rowSums(wwc_passes[11:23] ) == 3) # 97
+
+sum(is.na(wwc_passes$pass_body_part_name)) ## 4810/56710
+mean(is.na(wwc_passes$pass_body_part_name)) ## 8.48%
 
 c(1, 2, 3, 4, 5, 6, 6) 
