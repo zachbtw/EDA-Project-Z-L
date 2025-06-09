@@ -145,23 +145,7 @@ wwc_PassingChanges_long |>
        x = "Time of game (minutes)",
        y = "Rate (%)",
        caption = "Data courtesy of StatsBomb") +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = .5, 
-                                  face = "bold",
-                                  size = 20),
-        axis.title = element_text(size = 15,
-                                  face = "bold"),
-        axis.title.x = element_text(vjust = -1),
-        axis.text.x = element_text(angle = 45,
-                                   vjust = .5),
-        axis.text = element_text(size = 10,
-                                 color = "black"),
-        plot.caption = element_text(size = 10,
-                                    face = "italic"),
-        strip.background = element_blank(),
-        strip.text = element_text(size = 15,
-                                  face = "italic",
-                                  color = "grey3"))
+
 
 
 ## Solo Graphs
@@ -237,8 +221,6 @@ annotate_figure(plot,
                 fig.lab = caption,
                 fig.lab.pos = "bottom.right",
                 fig.lab.face = "italic")
-
-
 
 # Is there a difference between knockout and non-knockout teams in pass success throughout a game?
 wwc_knockout_diff <- wwc_passes |> 
@@ -333,6 +315,88 @@ wwc_knockout_diff |>
                                      size = 15,
                                      hjust = .5))
 
+# Looking at statistics by team -------------------------------------------
+wwc_spain_costa <- wwc_passes |> 
+  filter(period %in% c(1,2),
+         team_name %in% c("Spain", "Costa Rica")) |> 
+    mutate(time_range = factor(ifelse(minute < 5, "0 to 5",
+                             ifelse(period == 1 & 5 <= minute & minute < 10, "5 to 10",
+                             ifelse(period == 1 & 10 <= minute & minute < 15, "10 to 15",
+                             ifelse(period == 1 & 15 <= minute & minute < 20, "15 to 20",
+                             ifelse(period == 1 & 20 <= minute & minute < 25, "20 to 25",
+                             ifelse(period == 1 & 25 <= minute & minute < 30, "25 to 30",
+                             ifelse(period == 1 & 30 <= minute & minute < 35, "30 to 35",
+                             ifelse(period == 1 & 35 <= minute & minute < 40, "35 to 40",
+                             ifelse(period == 1 & 40 <= minute & minute < 45, "40 to 45",
+                             ifelse(period == 2 & 45 <= minute & minute < 50, "45 to 50",
+                             ifelse(period == 2 & 50 <= minute & minute < 55, "50 to 55",
+                             ifelse(period == 2 & 55 <= minute & minute < 60, "55 to 60",
+                             ifelse(period == 2 & 60 <= minute & minute < 65, "60 to 65",
+                             ifelse(period == 2 & 65 <= minute & minute < 70, "65 to 70",
+                             ifelse(period == 2 & 70 <= minute & minute < 75, "70 to 75",
+                             ifelse(period == 2 & 75 <= minute & minute < 80, "75 to 80",
+                             ifelse(period == 2 & 80 <= minute & minute < 85, "80 to 85",
+                             ifelse(period == 2 & 85 <= minute & minute < 90, "85 to 90",
+                             ifelse(period == 2 & 90 <= minute, "90+", NA))))))))))))))))))))) |> 
+  group_by(team_name, time_range) |> 
+  summarize(pressure_rate = (sum(under_pressure == TRUE)/n() * 100),
+            pass_completion_rate = (sum(pass_outcome_name == "Complete")/n() * 100),
+            mean_pass_length = mean(pass_length),
+            mean_pass_duration = mean(duration)) |>
+  na.omit()
+
+# Changing factor levels
+wwc_spain_costa$time_range <-factor(wwc_spain_costa$time_range, 
+                                      levels = c("0 to 5", "5 to 10", "10 to 15", "15 to 20", "20 to 25",
+                                                 "25 to 30", "30 to 35", "35 to 40", "40 to 45", "45 to 50",
+                                                 "50 to 55", "55 to 60", "60 to 65", "65 to 70", "70 to 75",
+                                                 "75 to 80", "80 to 85", "85 to 90", "90+"))
+
+# Rearranging columns
+wwc_spain_costa[1:19, ] <- wwc_spain_costa[c(1, 10, 2:9, 11:19), ]
+wwc_spain_costa[20:38, ] <- wwc_spain_costa[c(20, 29, 21:28, 30:38), ]
+
+# Pivoting longer to facet by team and passing statistic
+wwc_spain_costa_long <- wwc_spain_costa |> 
+  select(team_name, time_range, pressure_rate, pass_completion_rate) |> 
+  pivot_longer(pressure_rate:pass_completion_rate,
+               names_to = "Stat",
+               values_to = "Val") |>
+  mutate(Stat = ifelse(Stat == "pressure_rate", "Pressure Rate", "Pass Completion Rate"))
+
+# Looking at differences between Spain and Costa Rica
+wwc_spain_costa_long |> 
+  ggplot(aes(x = time_range, y = Val, fill = team_name)) +
+  geom_col(alpha = 1, position = "dodge") +
+  scale_fill_manual("Team name", values = c("#419153", "#f5c951")) +
+  facet_wrap(~Stat, scale = "free_y") +
+  labs(title = "Spain vs. Costa Rica mean passing statistics throughout 2023 WWC games",
+       x = "Time of game (minutes)",
+       y = "Rate (%)",
+       caption = "Data courtesy of StatsBomb") +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = .5, 
+                                  face = "bold",
+                                  size = 20),
+        axis.title = element_text(size = 15,
+                                  face = "bold"),
+        axis.title.x = element_text(vjust = -1),
+        axis.text.x = element_text(angle = 45,
+                                   vjust = .5),
+        axis.text = element_text(size = 10,
+                                 color = "black"),
+        plot.caption = element_text(size = 10,
+                                    face = "italic"),
+        strip.background = element_blank(),
+        strip.text = element_text(size = 15,
+                                  face = "italic",
+                                  color = "grey3"),
+        legend.title = element_text(face = "bold"))
+  
+  
+  
+
+?facet_grid
 # Clustering --------------------------------------------------------------
 ## Team statistics df
 team_stats <- wwc_passes |> 
