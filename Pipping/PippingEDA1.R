@@ -38,7 +38,28 @@ sum(rowSums(wwc_passes[11:23]) == 1) # 3629
 sum(rowSums(wwc_passes[11:23]) == 2) # 637
 sum(rowSums(wwc_passes[11:23] ) == 3) # 97
 
+wwc_passes <-
+wwc_passes |>
+  mutate(tot_poss = time_in_poss + time_to_poss_end)
 sum(is.na(wwc_passes$pass_body_part_name)) ## 4810/56710
 mean(is.na(wwc_passes$pass_body_part_name)) ## 8.48%
 
-c(1, 2, 3, 4, 5, 6, 6) 
+team_stats
+
+wwc_passes |>
+  group_by(team_name) |>
+  summary()
+sum(wwc_passes$pass_goal_assist)
+
+wwc_passes |> 
+  group_by(pass_outcome_name, under_pressure) |> 
+  count(pass_outcome_name, name = "Passes") |> 
+  filter(pass_outcome_name != "Unknown") |> 
+  ggplot(aes(x = reorder(under_pressure, Passes), y = Passes, fill = pass_outcome_name)) +
+  geom_col() +
+  scale_fill_manual("Under Pressure?", values = c("forestgreen", "goldenrod","red", "blue","yellow")) +
+  theme_bw()  +
+  scale_y_log10() +
+  labs(title = "WWC pass outcomes and their pressure rates",
+       y = "Pass Outcome")
+
