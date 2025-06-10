@@ -10,6 +10,7 @@ library(tidyverse)
 library(factoextra)
 library(ggpubr)
 library(janitor)
+library(plotly)
 wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
 theme_set(theme_bw())
 
@@ -395,13 +396,11 @@ wwc_spain_costa_long |>
         legend.title = element_text(face = "bold"))
   
   
-  
-
-?facet_grid
 # Clustering --------------------------------------------------------------
 ## Team statistics df
 
 player_stats <- wwc_passes |> 
+  filter(position_name != "Goalkeeper") |> 
   group_by(player_name, team_name) |> 
   summarize(pressure_rate = round((sum(under_pressure == TRUE)/n() * 100), 3),
             pass_completion_rate = round((sum(pass_outcome_name == "Complete")/n() * 100), 3),
@@ -419,13 +418,20 @@ player_stats <- wwc_passes |>
                                                   "England", "Nigeria",
                                                   "Colombia", "Jamaica"),
                                  TRUE, FALSE)) |> 
-  ungroup()
+  ungroup() 
 
 # 5 number summary of passes completed per player
-summary(player_stats$passes_attempted) # Minimum of 25 passes attempted to filter out low sample size players
+summary(player_stats$passes_attempted) # Minimum of 24 passes attempted to filter out low sample size players
 
+# 5 number summary of pressure rate for playets
+summary(player_stats$pressure_rate) # Minimum pressure rate of 12%
+
+# Also filtering out all goalkeepers because passing patterns are different than field players
+
+# Cleaning the data set
 player_stats_clean <- player_stats |> 
-  filter(passes_attempted >= 25)
+  filter(passes_attempted > 24,
+         pressure_rate >= 12)
 
 str(player_stats)
 
@@ -436,4 +442,32 @@ player_stats_std <- player_stats_clean |>
 
 # Elbow plot to select number of cluster
 player_stats_std |> 
-  fviz_nbclust(kmeans,method = "wss")
+  fviz_nbclust(FUNcluster = kmeans, method = "wss") # Elbow plot --> 5 clusters is ideal
+
+# k-means clustering
+player_stats_kmeans <- player_stats_std |> 
+  kmeans(centers = 5, nstart = 100, algorithm = "Lloyd")
+
+# Adding the clusters back to the df
+player_stats_clustered <- player_stats_clean |> 
+  mutate(cluster = as.factor(player_stats_kmeans$cluster))
+
+# Plotting through plotly
+plot_ly(player_stats_clustered,
+        x = ~pass_completion_rate,
+        y = ~pass_completion_up,
+        z = ~mean_duration,
+        type = "scatter3d",
+        color = ~as.factor(cluster),
+        colors = c("#041E42", "#BF0D3E", "cyan4", "goldenrod", "mediumpurple"),
+        mode = "markers",
+        text = ~player_name,
+        opacity = .7,
+        marker = list(size = 7, 
+                      colorbar = list("Cluster")))
+
+# Are the variables correlated?
+cor(player_stats_clustered$pass_completion_rate, player_stats_clustered$pass_completion_up)
+cor(player_stats_clustered$pass_completion_rate, player_stats_clustered$mean_pass_length)
+cor(player_stats_clustered$mean_pass_length, player_stats_clustered$pass_completion_up)
+        
