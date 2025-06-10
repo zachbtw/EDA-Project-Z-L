@@ -14,7 +14,7 @@ spain_passes <- filter(wwc_passes, team_name == "Spain Women's")
 library(dplyr)
 library(tidyr)
 
-wwc_passes_2 <- wwc_passes %>%
+wwc_passes <- wwc_passes %>%
   group_by(team_name) |>
   mutate(
     prev_period = lag(period),
