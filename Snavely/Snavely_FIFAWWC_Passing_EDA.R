@@ -7,6 +7,7 @@
 library(tidyverse)
 # install.packages("janitor")
 # install.packages("ggpubr")
+library(factoextra)
 library(ggpubr)
 library(janitor)
 wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
@@ -399,12 +400,14 @@ wwc_spain_costa_long |>
 ?facet_grid
 # Clustering --------------------------------------------------------------
 ## Team statistics df
-team_stats <- wwc_passes |> 
-  group_by(team_name) |> 
-  summarize(pressure_rate = (sum(under_pressure == TRUE)/n() * 100),
-            pass_completion_rate = (sum(pass_outcome_name == "Complete")/n() * 100),
-            switch_rate = (sum(pass_switch == TRUE)/n() * 100),
-            pass_miscommunication_rate = (sum(pass_miscommunication == TRUE)/n() * 100),
+
+player_stats <- wwc_passes |> 
+  group_by(player_name, team_name) |> 
+  summarize(pressure_rate = round((sum(under_pressure == TRUE)/n() * 100), 3),
+            pass_completion_rate = round((sum(pass_outcome_name == "Complete")/n() * 100), 3),
+            pass_completion_up = round((sum(under_pressure == TRUE & pass_outcome_name == "Complete") 
+                                  / sum(under_pressure == TRUE) * 100), 3),
+            passes_attempted = as.numeric(sum(pass_outcome_name %in% c("Complete", "Incomplete", "Out"))),
             mean_duration = mean(duration),
             mean_pass_length = mean(pass_length)) |> 
   mutate(knockout_stage = ifelse(team_name %in% c("Switzerland", "Spain", 
@@ -415,11 +418,22 @@ team_stats <- wwc_passes |>
                                                   "France", "Morocco",
                                                   "England", "Nigeria",
                                                   "Colombia", "Jamaica"),
-                                 TRUE, FALSE))
+                                 TRUE, FALSE)) |> 
+  ungroup()
 
-# Are pressure_rate and completion_rate correlated?
-team_stats |> 
-  ggplot(aes(x = pressure_rate, y = pass_completion_rate)) +
-  geom_point()
+# 5 number summary of passes completed per player
+summary(player_stats$passes_attempted) # Minimum of 25 passes attempted to filter out low sample size players
 
-cor(team_stats$pressure_rate, team_stats$pass_completion_rate)
+player_stats_clean <- player_stats |> 
+  filter(passes_attempted >= 25)
+
+str(player_stats)
+
+# Scaling the data
+player_stats_std <- player_stats_clean |> 
+  select(pass_completion_rate, pass_completion_up, mean_pass_length) |>
+  scale()
+
+# Elbow plot to select number of cluster
+player_stats_std |> 
+  fviz_nbclust(kmeans,method = "wss")
