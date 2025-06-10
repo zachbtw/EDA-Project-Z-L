@@ -1,0 +1,39 @@
+
+library(ggplot2)
+install.packages("gganimate")
+install.packages("ggsoccer")
+
+library(gganimate)
+library(ggsoccer)
+library(dplyr)
+
+# Sample pass data (replace this with your real data)
+# df <- your data frame with start_x, start_y, end_x, end_y, position
+spain_animate <- spain_g1
+# Create base pass plot
+pass_plot <- spain_animate |>
+  ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y)) +
+  geom_segment(arrow = arrow(length = unit(0.2, "cm")), color = "blue", alpha = 0.7) +
+  coord_fixed() +
+  xlim(0, 120) + ylim(0, 80) +  # or match your field dimensions
+  theme_minimal() +
+  labs(title = "Passes by Position: {closest_state}", x = "X", y = "Y") +
+  theme(plot.title = element_text(size = 16, face = "bold"))
+
+# Add animation by position
+animated <- pass_plot +
+  transition_states(position_name, transition_length = 2, state_length = 1, wrap = FALSE) +
+  ease_aes('cubic-in-out')
+
+# Save as GIF
+animate(animated, width = 800, height = 600, renderer = gifski_renderer("passes_by_position.gif"))
+
+
+spain_g1 |>
+  ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y)) +
+  annotate_pitch(
+    dimensions = pitch_statsbomb, #,
+    colour = "white",             # Pitch lines
+    fill = "#7fc47f") +             # Pitch colour+
+  geom_segment(color = "blue", linetype = "solid", size = 0.1) +
+  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) 
