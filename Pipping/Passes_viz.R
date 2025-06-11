@@ -50,18 +50,36 @@ table(wwc_passes$position_name)
 
 germany <- filter(wwc_passes, team_name == "Germany")
 
-germany_game1 <- filter(germany, game == 1) |>
+germ_games <- filter(germany, game %in% c(1, 2, 3)) |>
+  group_by(game) |>
   mutate(
     complete_so_far = cumsum(pass_outcome_name == "Complete"),
     total_so_far = row_number(),
-    completion_pct = complete_so_far / total_so_far
-  )
-germany_game2 <-  filter(germany, game == 2) |>
+    completion_pct = complete_so_far / total_so_far,
+    pressure_rate = (sum(under_pressure == TRUE)/n())
+  ) |>
+  ungroup()
+germ_games |>
+  ggplot(aes(x = total_so_far, y = completion_pct, color = as.factor(game))) +
+  geom_line() + 
+  geom_line(aes(x = total_so_far, y = pressure_rate, color = as.factor(game))) +
+  xlim(15, 700)
+
+morocco <- filter(wwc_passes, team_name == "Morocco")
+
+morocco_group <- filter(morocco, game %in% c(1, 2, 3)) |>
+  group_by(game) |>
   mutate(
     complete_so_far = cumsum(pass_outcome_name == "Complete"),
     total_so_far = row_number(),
-    completion_pct = complete_so_far / total_so_far
-  )
-germany_game1 |>
-  ggplot(aes(x = total_so_far, y = completion_pct, color = team_name)) +
-  geom_line() 
+    completion_pct = complete_so_far / total_so_far,
+    pass_completion_up = round((cumsum(under_pressure == TRUE & pass_outcome_name == "Complete") 
+                                / cumsum(under_pressure == TRUE) * 100), 2),
+    opponent = factor(ifelse(game == 1, "Germany", ifelse(game == 2, "South Korea", "Colombia")),levels = c("Germany", "South Korea", "Colombia"))
+  ) |>
+  ungroup()
+
+morocco_group |>
+ggplot(aes(x = total_so_far, y = completion_pct, color = opponent)) +
+  geom_line() + 
+  xlim(15, 700)
