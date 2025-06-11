@@ -59,6 +59,27 @@ wwc_passes <- wwc_passes |>
   mutate(tot_possession = time_in_poss + time_to_poss_end)
 
 
+# Team Statistics ---------------------------------------------------------
+
+team_stats <- wwc_passes |> 
+  group_by(team_name) |> 
+  summarize(pressure_rate = round((sum(under_pressure == TRUE)/n() * 100), 2),
+            pass_completion_rate = round((sum(pass_outcome_name == "Complete")/n() * 100), 2),
+            pass_completion_up = round((sum(under_pressure == TRUE & pass_outcome_name == "Complete") 
+                                        / sum(under_pressure == TRUE) * 100), 2),
+            passes_attempted = as.numeric(sum(pass_outcome_name %in% c("Complete", "Incomplete", "Out"))),
+            mean_duration = mean(duration),
+            mean_pass_length = round(mean(pass_length), 2)) |> 
+  mutate(knockout_stage = ifelse(team_name %in% c("Switzerland", "Spain", 
+                                                  "Netherlands", "South Africa",
+                                                  "Japan", "Norway",
+                                                  "Sweden", "United States",
+                                                  "Australia", "Denmark",
+                                                  "France", "Morocco",
+                                                  "England", "Nigeria",
+                                                  "Colombia", "Jamaica"),
+                                 TRUE, FALSE)) |> 
+  ungroup() 
 
 
 # Initial EDA ---------------------------------------------------------------------
@@ -147,6 +168,23 @@ wwc_PassingChanges_long |>
        x = "Time of game (minutes)",
        y = "Rate (%)",
        caption = "Data courtesy of StatsBomb") +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = .5, 
+                                    face = "bold",
+                                    size = 20),
+          axis.title = element_text(size = 15,
+                                    face = "bold"),
+          axis.title.x = element_text(vjust = -1),
+          axis.text.x = element_text(angle = 45,
+                                     vjust = .5),
+          axis.text = element_text(size = 10,
+                                   color = "black"),
+          plot.caption = element_text(size = 10,
+                                      face = "italic"),
+          strip.background = element_blank(),
+          strip.text = element_text(size = 15,
+                                    face = "italic",
+                                    color = "grey3"))
 
 
 
@@ -317,7 +355,7 @@ wwc_knockout_diff |>
                                      size = 15,
                                      hjust = .5))
 
-# Looking at statistics by team -------------------------------------------
+# Spain vs. Costa Rica -------------------------------------------
 wwc_spain_costa <- wwc_passes |> 
   filter(period %in% c(1,2),
          team_name %in% c("Spain", "Costa Rica")) |> 
@@ -394,6 +432,3 @@ wwc_spain_costa_long |>
                                   face = "italic",
                                   color = "grey3"),
         legend.title = element_text(face = "bold"))
-  
-  
-        

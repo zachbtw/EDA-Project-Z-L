@@ -153,17 +153,17 @@ cor(player_stats_clustered$mean_pass_length, player_stats_clustered$pass_complet
 # Creating a clustered statistics df
 cluster_stats <- player_stats_clustered |> 
   group_by(cluster) |> 
-  summarize(pass_completion_rate = median(pass_completion_rate),
-         pass_completion_up = median(pass_completion_up),
-         pass_length = median(mean_pass_length))
+  summarize(pass_completion_rate = round(median(pass_completion_rate), 2),
+         pass_completion_up = round(median(pass_completion_up), 2),
+         pass_length = round(median(mean_pass_length), 2))
 
 # Creating a tibble
 Cluster_tibble <- cluster_stats |>
   gt() |>
   tab_header(title = md("**Median passing measures per cluster**")) |>
   cols_label(cluster = "Cluster",
-             pass_completion_rate = "Pass completion rate", 
-             pass_completion_up = "Pass completion rate under pressure",
+             pass_completion_rate = "Pass completion rate (%)", 
+             pass_completion_up = "Pass completion rate under pressure (%)",
              pass_length = "Pass length") |>
   data_color(columns = c(pass_completion_rate, pass_completion_up, pass_length),
              fn = scales::col_numeric(palette = c("white","#419153", "darkgreen"), domain = NULL)) |>
