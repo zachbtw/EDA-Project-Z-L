@@ -31,7 +31,7 @@ animate(animated, width = 800, height = 600, renderer = gifski_renderer("passes_
 spain_g1_gk <- filter(spain_passes, game == 1, position_name == "Goalkeeper")
 cr_g1_rb <- filter(cr_passes, game == 1, position_name == "Right Back")
 
-UNICE <- filter(wwc_passes, player_name == "Aine O\"Gorman")
+UNICE <- filter(wwc_passes, player_name == "Elena Linari")
 UNICE |>
   ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
   coord_flip() +
@@ -40,10 +40,28 @@ UNICE |>
     colour = "white",             # Pitch lines
     fill = "#7fc47f") +             # Pitch colour+
   geom_segment(aes(color = pass_outcome_name, linetype = under_pressure), size = 0.5, alpha = 0.5) +
-  scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow")) +
+  scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow", "hotpink")) +
   geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) 
 
 filter(spain_passes, game == 1, position_name == "Goalkeeper", pass_outcome_name == "Incomplete")
 table(wwc_passes$pass_outcome_name)
 
 table(wwc_passes$position_name)
+
+germany <- filter(wwc_passes, team_name == "Germany")
+
+germany_game1 <- filter(germany, game == 1) |>
+  mutate(
+    complete_so_far = cumsum(pass_outcome_name == "Complete"),
+    total_so_far = row_number(),
+    completion_pct = complete_so_far / total_so_far
+  )
+germany_game2 <-  filter(germany, game == 2) |>
+  mutate(
+    complete_so_far = cumsum(pass_outcome_name == "Complete"),
+    total_so_far = row_number(),
+    completion_pct = complete_so_far / total_so_far
+  )
+germany_game1 |>
+  ggplot(aes(x = total_so_far, y = completion_pct, color = team_name)) +
+  geom_line() 
