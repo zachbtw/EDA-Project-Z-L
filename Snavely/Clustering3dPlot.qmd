@@ -1,6 +1,8 @@
 ---
 title: "Clustering 2023 WWC players by their passing archetypes"
 format: html
+type: website
+output-dir: docs
 ---
 By: Luke Snavely and Zachary Pipping
 
