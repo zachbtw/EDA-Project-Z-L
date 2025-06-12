@@ -434,3 +434,4 @@ wwc_spain_costa_long |>
                                   face = "italic",
                                   color = "grey3"),
         legend.title = element_text(face = "bold"))
+

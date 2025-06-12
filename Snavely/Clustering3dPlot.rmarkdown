@@ -1,9 +1,20 @@
+---
+title: "Clustering 2023 WWC players by their passing archetypes"
+format: html
+---
+
+
+By: Luke Snavely and Zachary Pipping
+
+*Overview*:
+This project aims to cluster players in the 2023 women's world cup by their passing completion rates, ability to successfully pass under pressure, and their average pass lengths. 
+
+<br>
+**Initial data cleaning**
+
+
+```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
-# install.packages("janitor")
-# install.packages("ggpubr")
-# install.packages("RColorBrewer")
-# install.packages("gt")
-# install.packages("gtExtras")
 library(factoextra)
 library(ggpubr)
 library(janitor)
@@ -11,11 +22,10 @@ library(plotly)
 library(RColorBrewer)
 library(gt)
 library(gtExtras)
-wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
 theme_set(theme_bw())
 
-# Cleaning Data -----------------------------------------------------------
-
+# Reading in the data
+wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
 
 ## Cleaning the data
 # Cleaning the names
@@ -38,7 +48,6 @@ wwc_passes_3 <- wwc_passes |>
 wwc_passes[28] <- wwc_passes_3
 
 # Removing "Women's" for the teams
-table(wwc_passes$team_name)
 wwc_passes <- wwc_passes |> 
   mutate(team_name = str_remove_all(team_name, " Women's"))
 
@@ -53,13 +62,18 @@ wwc_passes <- wwc_passes |>
                                                   "England", "Nigeria",
                                                   "Colombia", "Jamaica"),
                                  TRUE, FALSE))
+```
 
-# Adding a total time in possession column
-wwc_passes <- wwc_passes |> 
-  mutate(tot_possession = time_in_poss + time_to_poss_end)
 
-# Clustering --------------------------------------------------------------
 
+<br>
+
+**Clustering process**
+
+
+```{r, warning = FALSE}
+## Clustering
+# Note: filtering out all goalkeepers because passing patterns are different than field players
 player_stats <- wwc_passes |> 
   filter(position_name != "Goalkeeper") |> 
   group_by(player_name, team_name) |> 
@@ -84,17 +98,14 @@ player_stats <- wwc_passes |>
 # 5 number summary of passes completed per player
 summary(player_stats$passes_attempted) # Minimum of 24 passes attempted to filter out low sample size players
 
-# 5 number summary of pressure rate for playets
+# 5 number summary of pressure rate for players
 summary(player_stats$pressure_rate) # Minimum pressure rate of 12%
 
-# Also filtering out all goalkeepers because passing patterns are different than field players
 
 # Cleaning the data set
 player_stats_clean <- player_stats |> 
   filter(passes_attempted > 24,
          pressure_rate >= 12)
-
-str(player_stats)
 
 # Scaling the data
 player_stats_std <- player_stats_clean |> 
@@ -112,8 +123,16 @@ player_stats_kmeans <- player_stats_std |>
 # Adding the clusters back to the df
 player_stats_clustered <- player_stats_clean |> 
   mutate(cluster = as.factor(player_stats_kmeans$cluster))
+```
 
-# Plotting through plotly
+
+
+<br>
+
+**3D Rendering of clusters**
+
+
+```{r, warning = FALSE, fig.width = 14, fig.height = 10}
 plot_ly(player_stats_clustered,
         x = ~pass_completion_rate,
         y = ~pass_completion_up,
@@ -133,7 +152,7 @@ plot_ly(player_stats_clustered,
                       font = list(size = 30))) |> 
   layout(scene = list(xaxis = list(title = "<b>Pass completion rate (%)</b>"),
                       yaxis = list(title = "<b>Pass competion rate under pressure (%)</b>"),
-                      zaxis = list(title = "<b>Mean pass length (meters)</b>"))) |>
+                      zaxis = list(title = "<b>Mean pass length</b>"))) |>
   layout(scene = list(xaxis = list(titlefont = list(size = 17), tickfont = list(size = 15)),
                       yaxis = list(titlefont = list(size = 17), tickfont = list(size = 15)),
                       zaxis = list(titlefont = list(size = 17), tickfont = list(size = 15)))) |>
@@ -142,13 +161,19 @@ plot_ly(player_stats_clustered,
                       zaxis = list(gridcolor = "darkgrey", gridwidth = 2))) |>
   layout(scene = list(aspectmode = "auto")) |> 
   layout(legend = list(title = list(text = "Cluster"))) |> 
-  layout(legend = list(font = list(size = 20, face = "bold")))
+  layout(legend = list(font = list(size = 20, face = "bold"))) |> 
+  bslib::card(full_screen = TRUE)
+```
 
-# Are the variables correlated?
-cor(player_stats_clustered$pass_completion_rate, player_stats_clustered$pass_completion_up)
-cor(player_stats_clustered$pass_completion_rate, player_stats_clustered$mean_pass_length)
-cor(player_stats_clustered$mean_pass_length, player_stats_clustered$pass_completion_up)
 
+
+<br>
+
+**Table highlighting cluster statistics**
+
+
+```{r, warning = FALSE}
+## Creating a table
 # Creating a clustered statistics df
 cluster_stats <- player_stats_clustered |> 
   group_by(cluster) |> 
@@ -160,14 +185,14 @@ cluster_stats <- player_stats_clustered |>
 Cluster_tibble <- cluster_stats |>
   gt() |>
   tab_header(title = md("**Median passing measures per cluster**")) |>
-  tab_footnote(footnote = md("*Data provided by StatsBomb*")) |> 
   cols_label(cluster = "Cluster",
              pass_completion_rate = "Pass completion rate (%)", 
              pass_completion_up = "Pass completion rate under pressure (%)",
-             pass_length = "Pass length (meters)") |>
+             pass_length = "Pass length") |>
   data_color(columns = c(pass_completion_rate, pass_completion_up, pass_length),
-             fn = scales::col_numeric(palette = c("white","#419153", "darkgreen"), domain = NULL)) #|>
-  gtExtras::gt_theme_espn() |> 
-  #gtsave(file = "Cluster_table.png")
+             fn = scales::col_numeric(palette = c("white","#419153", "darkgreen"), domain = NULL)) |>
+  gtExtras::gt_theme_espn()
 
 Cluster_tibble
+```
+

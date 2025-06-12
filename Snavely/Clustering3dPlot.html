@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Clustering 2023 WWC players by their passing archetypes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Clustering3dPlot_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Clustering3dPlot_files/libs/quarto-html/quarto.js"></script>
+<script src="Clustering3dPlot_files/libs/quarto-html/popper.min.js"></script>
+<script src="Clustering3dPlot_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Clustering3dPlot_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Clustering3dPlot_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Clustering3dPlot_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Clustering3dPlot_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Clustering3dPlot_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Clustering3dPlot_files/libs/bootstrap/bootstrap-c0367b04c37547644fece4185067e4a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Clustering3dPlot_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="Clustering3dPlot_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="Clustering3dPlot_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="Clustering3dPlot_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="Clustering3dPlot_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="Clustering3dPlot_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="Clustering3dPlot_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="Clustering3dPlot_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="Clustering3dPlot_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<script src="Clustering3dPlot_files/libs/bslib-component-js-0.9.0/components.min.js"></script>
+<script src="Clustering3dPlot_files/libs/bslib-component-js-0.9.0/web-components.min.js" type="module"></script>
+<link href="Clustering3dPlot_files/libs/bslib-component-css-0.9.0/components.css" rel="stylesheet">
+<script src="Clustering3dPlot_files/libs/bslib-tag-require-0.9.0/tag-require.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Clustering 2023 WWC players by their passing archetypes</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>By: Luke Snavely and Zachary Pipping</p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview:</h2>
+<p>This project aims to cluster players in the 2023 Women’s World Cup by their passing completion rates, ability to successfully pass under pressure, and their average pass lengths. Utilizing k-means, the analysis results in five distinct clusters, with a range of passing abilities. Note that all data was derived from StatsBomb.</p>
+</section>
+<section id="initial-data-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="initial-data-cleaning">Initial data cleaning</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtExtras)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading in the data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>wwc_passes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Cleaning the data</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaning the names</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>wwc_passes <span class="ot">&lt;-</span> wwc_passes <span class="sc">|&gt;</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Replacing NAs with FALSE for pass columns</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>wwc_passes_2 <span class="ot">&lt;-</span> wwc_passes <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(under_pressure, counterpress, pass_switch<span class="sc">:</span>pass_miscommunication)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>wwc_passes_2[<span class="fu">is.na</span>(wwc_passes_2)] <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>wwc_passes[<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">11</span><span class="sc">:</span><span class="dv">23</span>)] <span class="ot">&lt;-</span> wwc_passes_2</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Replacing NAs in pass outcomes with "Complete"</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>wwc_passes_3 <span class="ot">&lt;-</span> wwc_passes <span class="sc">|&gt;</span> </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(pass_outcome_name) <span class="sc">|&gt;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pass_outcome_name =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(pass_outcome_name <span class="sc">==</span> <span class="cn">TRUE</span>), </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"Complete"</span>, pass_outcome_name))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>wwc_passes[<span class="dv">28</span>] <span class="ot">&lt;-</span> wwc_passes_3</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing "Women's" for the teams</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>wwc_passes <span class="ot">&lt;-</span> wwc_passes <span class="sc">|&gt;</span> </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">team_name =</span> <span class="fu">str_remove_all</span>(team_name, <span class="st">" Women's"</span>))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a "knockout_stage" column to differentiate between playoff and non-playoff teams</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>wwc_passes <span class="ot">&lt;-</span> wwc_passes <span class="sc">|&gt;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">knockout_stage =</span> <span class="fu">ifelse</span>(team_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Switzerland"</span>, <span class="st">"Spain"</span>, </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Netherlands"</span>, <span class="st">"South Africa"</span>,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Japan"</span>, <span class="st">"Norway"</span>,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Sweden"</span>, <span class="st">"United States"</span>,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Australia"</span>, <span class="st">"Denmark"</span>,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"France"</span>, <span class="st">"Morocco"</span>,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"England"</span>, <span class="st">"Nigeria"</span>,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Colombia"</span>, <span class="st">"Jamaica"</span>),</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>                                 <span class="cn">TRUE</span>, <span class="cn">FALSE</span>))</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding game number</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>wwc_passes <span class="ot">&lt;-</span> wwc_passes <span class="sc">|&gt;</span> </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(team_name) <span class="sc">|&gt;</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">prev_period =</span> <span class="fu">lag</span>(period),</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># start of a new game</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">new_game =</span> <span class="fu">if_else</span>(period <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">lag</span>(period) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>), <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">new_game =</span> <span class="fu">replace_na</span>(new_game, <span class="dv">1</span>),</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># game numbers</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">game =</span> <span class="fu">cumsum</span>(new_game) <span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(game, <span class="fu">everything</span>(), <span class="sc">-</span>prev_period, <span class="sc">-</span>new_game)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section>
+<section id="clustering-process" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-process">Clustering process</h2>
+<p>When filtering through the data set, there are multiple variables we could cluster by. However, we chose three variables:</p>
+<ul>
+<li>Passing completion rate
+<ul>
+<li>The average percentage of passes completed over all games played by the player.</li>
+</ul></li>
+<li>Passing completion rate under pressure
+<ul>
+<li>The average percentage of passes with pressure completed over all games played by the player. Pressure is defined as an opposing player defending the attacking player closely when the pass occurs.</li>
+</ul></li>
+<li>Pass length
+<ul>
+<li>The average distance (in meters) for player passes.</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Clustering</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: filtering out all goalkeepers because passing patterns are different than field players</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>player_stats <span class="ot">&lt;-</span> wwc_passes <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(position_name <span class="sc">!=</span> <span class="st">"Goalkeeper"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(player_name, team_name) <span class="sc">|&gt;</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pressure_rate =</span> <span class="fu">round</span>((<span class="fu">sum</span>(under_pressure <span class="sc">==</span> <span class="cn">TRUE</span>)<span class="sc">/</span><span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span>), <span class="dv">2</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">pass_completion_rate =</span> <span class="fu">round</span>((<span class="fu">sum</span>(pass_outcome_name <span class="sc">==</span> <span class="st">"Complete"</span>)<span class="sc">/</span><span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span>), <span class="dv">2</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">pass_completion_up =</span> <span class="fu">round</span>((<span class="fu">sum</span>(under_pressure <span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;</span> pass_outcome_name <span class="sc">==</span> <span class="st">"Complete"</span>) </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                                        <span class="sc">/</span> <span class="fu">sum</span>(under_pressure <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span>), <span class="dv">2</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">passes_attempted =</span> <span class="fu">as.numeric</span>(<span class="fu">sum</span>(pass_outcome_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Complete"</span>, <span class="st">"Incomplete"</span>, <span class="st">"Out"</span>))),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_duration =</span> <span class="fu">mean</span>(duration),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_pass_length =</span> <span class="fu">round</span>(<span class="fu">mean</span>(pass_length), <span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">knockout_stage =</span> <span class="fu">ifelse</span>(team_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Switzerland"</span>, <span class="st">"Spain"</span>, </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Netherlands"</span>, <span class="st">"South Africa"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Japan"</span>, <span class="st">"Norway"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Sweden"</span>, <span class="st">"United States"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Australia"</span>, <span class="st">"Denmark"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"France"</span>, <span class="st">"Morocco"</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"England"</span>, <span class="st">"Nigeria"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                                                  <span class="st">"Colombia"</span>, <span class="st">"Jamaica"</span>),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                                 <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'player_name'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+</div>
+<p>We want to eliminate players who only passed the ball a couple times. This low sample size could inflate passing completion rates. Here, we filter players based if they hit the first quantile for the given completed passes and pressure rates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 number summary of passes completed per player</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(player_stats<span class="sc">$</span>passes_attempted) <span class="co"># Minimum of 24 passes attempted to filter out low sample size players</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00   24.00   66.00   92.87  129.50  641.00 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 number summary of pressure rate for players</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(player_stats<span class="sc">$</span>pressure_rate) <span class="co"># Minimum pressure rate of 12%</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   11.72   18.93   21.05   27.93  100.00 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaning the data set</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>player_stats_clean <span class="ot">&lt;-</span> player_stats <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(passes_attempted <span class="sc">&gt;</span> <span class="dv">24</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>         pressure_rate <span class="sc">&gt;=</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We must scale the data, and then we can find our optimal number of clusters. Using an elbow plot, we believed 5 clusters was ideal.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scaling the data</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>player_stats_std <span class="ot">&lt;-</span> player_stats_clean <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(pass_completion_rate, pass_completion_up, mean_pass_length) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Elbow plot to select number of cluster</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>player_stats_std <span class="sc">|&gt;</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fviz_nbclust</span>(<span class="at">FUNcluster =</span> kmeans, <span class="at">method =</span> <span class="st">"wss"</span>) <span class="co"># Elbow plot --&gt; 5 clusters is ideal</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clustering3dPlot_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># k-means clustering</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>player_stats_kmeans <span class="ot">&lt;-</span> player_stats_std <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kmeans</span>(<span class="at">centers =</span> <span class="dv">5</span>, <span class="at">nstart =</span> <span class="dv">100</span>, <span class="at">algorithm =</span> <span class="st">"Lloyd"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding the clusters back to the df</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>player_stats_clustered <span class="ot">&lt;-</span> player_stats_clean <span class="sc">|&gt;</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cluster =</span> <span class="fu">as.factor</span>(player_stats_kmeans<span class="sc">$</span>cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section>
+<section id="d-rendering-of-clusters" class="level2">
+<h2 class="anchored" data-anchor-id="d-rendering-of-clusters">3D Rendering of clusters</h2>
+<p>Note: “Pass completion rate under pressure” is abbreviated to “Pass completion UP.”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(player_stats_clustered,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="sc">~</span>pass_completion_rate,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="sc">~</span>pass_completion_up,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">z =</span> <span class="sc">~</span>mean_pass_length,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="sc">~</span><span class="fu">as.factor</span>(cluster),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">type =</span> <span class="st">"scatter3d"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">mode =</span> <span class="st">"markers"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"#419153"</span>, <span class="st">"#f5c951"</span>, <span class="st">"#4292f6"</span>, <span class="st">"#d5d4c6"</span>, <span class="st">"grey3"</span>),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="sc">~</span>player_name,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">hovertemplate =</span> <span class="fu">paste</span>(<span class="st">"&lt;i&gt;%{text}&lt;/i&gt;&lt;br&gt;"</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"&lt;b&gt;Pass completion&lt;/b&gt;: %{x}%"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"&lt;br&gt;&lt;b&gt;Pass completion UP&lt;/b&gt;: %{y}%&lt;br&gt;"</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"&lt;b&gt;Mean pass length&lt;/b&gt;: %{z}"</span>),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">opacity =</span> .<span class="dv">8</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">marker =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">7</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">"&lt;b&gt;2023 WWC passing statistics by player&lt;b&gt;"</span>, <span class="at">y =</span> .<span class="dv">95</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">font =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">30</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"&lt;b&gt;Pass completion rate (%)&lt;/b&gt;"</span>),</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                      <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"&lt;b&gt;Pass competion rate UP (%)&lt;/b&gt;"</span>),</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"&lt;b&gt;Mean pass length (meters)&lt;/b&gt;"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">titlefont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">17</span>), <span class="at">tickfont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">15</span>)),</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">titlefont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">17</span>), <span class="at">tickfont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">15</span>)),</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">titlefont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">17</span>), <span class="at">tickfont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">15</span>)))) <span class="sc">|&gt;</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">gridcolor =</span> <span class="st">"darkgrey"</span>, <span class="at">gridwidth =</span> <span class="dv">2</span>),</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>                      <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">gridcolor =</span> <span class="st">"darkgrey"</span>, <span class="at">gridwidth =</span> <span class="dv">2</span>),</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">gridcolor =</span> <span class="st">"darkgrey"</span>, <span class="at">gridwidth =</span> <span class="dv">2</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">aspectmode =</span> <span class="st">"auto"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">legend =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">"Cluster"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">legend =</span> <span class="fu">list</span>(<span class="at">font =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">"bold"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  bslib<span class="sc">::</span><span class="fu">card</span>(<span class="at">full_screen =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-3152">
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-b36be8bc582382064377" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-b36be8bc582382064377">{"x":{"visdat":{"492a6a0f0d18":["function () ","plotlyVisDat"]},"cur_data":"492a6a0f0d18","attrs":{"492a6a0f0d18":{"x":{},"y":{},"z":{},"mode":"markers","text":{},"hovertemplate":"<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","opacity":0.80000000000000004,"marker":{"size":7},"color":{},"colors":["#419153","#f5c951","#4292f6","#d5d4c6","grey3"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"<b>2023 WWC passing statistics by player<b>","y":0.94999999999999996,"font":{"size":30}},"scene":{"xaxis":{"title":"<b>Pass completion rate (%)<\/b>","titlefont":{"size":17},"tickfont":{"size":15},"gridcolor":"darkgrey","gridwidth":2},"yaxis":{"title":"<b>Pass competion rate UP (%)<\/b>","titlefont":{"size":17},"tickfont":{"size":15},"gridcolor":"darkgrey","gridwidth":2},"zaxis":{"title":"<b>Mean pass length (meters)<\/b>","titlefont":{"size":17},"tickfont":{"size":15},"gridcolor":"darkgrey","gridwidth":2},"aspectmode":"auto"},"legend":{"title":{"text":"Cluster"},"font":{"size":20,"face":"bold"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[64,63.240000000000002,59.68,59.32,58.82,48.390000000000001,61.539999999999999,58.060000000000002,61.109999999999999,52.859999999999999,58.329999999999998,69.739999999999995,61.630000000000003,55.100000000000001,57.140000000000001,64.099999999999994,67.5,67.799999999999997,63.640000000000001,50,72.409999999999997,57.890000000000001,63.490000000000002,45.829999999999998,58.539999999999999,57.5,58.439999999999998,58.82,52.079999999999998,64.519999999999996,54.350000000000001,51.520000000000003,61.899999999999999,56.25,56,67.390000000000001,65.620000000000005],"y":[20,46.43,52,43.75,43.75,40,45.450000000000003,40,52.630000000000003,40,42.859999999999999,46.670000000000002,41.18,50,55.560000000000002,53.850000000000001,50,46.149999999999999,0,38.100000000000001,40,44.439999999999998,36.840000000000003,33.329999999999998,50,46.670000000000002,63.159999999999997,60,41.670000000000002,50,40.909999999999997,38.890000000000001,56.25,63.159999999999997,44.439999999999998,33.329999999999998,50],"z":[19.84,15.52,18.309999999999999,16.559999999999999,16.82,17.620000000000001,16.449999999999999,19.920000000000002,13.76,18.039999999999999,15.48,16.75,15.77,18.629999999999999,16.739999999999998,12.66,13.42,13.9,18.359999999999999,22.559999999999999,15.15,21.199999999999999,22.149999999999999,17.02,16.079999999999998,17.98,14.58,19.170000000000002,14.81,16.280000000000001,15.76,14.5,16.940000000000001,17.079999999999998,15.220000000000001,16.789999999999999,14.640000000000001],"mode":"markers","text":["Aine O\"Gorman","Anissa Lahmari","Barbara Bonansea","Barbra Banda","Batcheba Louis","Cheyna Lee Matthews","Chloe Kelly","Deborah Ajibola Abiodun","Diana Micaela Abreu de Sousa e Silva","Emilie Haavi","Emily Masiel Cedeño Coba","Heather Payne","Jermaine Seoposenwe","Katrina Jacqueline Rivera Guillou","Khadija Monifa Shaw","Kyra Carusa","Lina Mona Andréa Hurtig","Loan Hoàng Thị","Mapula Nomvula Kgoale","Marta Alexandra Cox Villarreal","María Paula Salas","Megan Anna Rapinoe","Nouhaila Benzina","Olivia Alma Charlotta Schough","Quinley Mirielle Campomanes Quezada-Keča","Roselord Borgella","Sakina Ouzraoui Diki","Sara Kristine Bantan Eggesvik","Sarina Isabel Calpo Bolden","Sibulele Cecilia Holweni","Sophia Olivia Smith","Sophie Roman Haug","Thị Thảo Thái","Vicki Becho","Viola Calligaris","Xin Zhang","Yu-Ri Choe"],"hovertemplate":["<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}"],"opacity":0.80000000000000004,"marker":{"color":"rgba(65,145,83,1)","size":7,"line":{"color":"rgba(65,145,83,1)"}},"type":"scatter3d","name":"1","textfont":{"color":"rgba(65,145,83,1)"},"error_y":{"color":"rgba(65,145,83,1)"},"error_x":{"color":"rgba(65,145,83,1)"},"line":{"color":"rgba(65,145,83,1)"},"frame":null},{"x":[66.099999999999994,69.700000000000003,74.260000000000005,67.120000000000005,67.590000000000003,70.930000000000007,72.930000000000007,72.129999999999995,71.290000000000006,78.049999999999997,68.569999999999993,72.730000000000004,71.260000000000005,72.219999999999999,62.789999999999999,68.670000000000002,70.650000000000006,72.840000000000003,67.950000000000003,82.140000000000001,73.530000000000001,74.829999999999998,77.420000000000002,78.689999999999998,75.760000000000005,65.650000000000006,77.780000000000001,70.079999999999998,70.709999999999994,74.189999999999998,72.5,70.099999999999994,75.489999999999995,71.030000000000001,75,64.859999999999999,67.209999999999994,68.75,72,71.189999999999998,64.370000000000005,73.680000000000007,72.510000000000005,73.629999999999995,78,66.670000000000002,74.579999999999998,61.020000000000003,69.230000000000004,78.769999999999996,75.969999999999999,72.519999999999996,69.640000000000001,70.870000000000005,71.260000000000005,72.989999999999995,76.319999999999993,70.969999999999999,81.819999999999993,77.549999999999997,71.430000000000007,72.670000000000002,76.519999999999996,76.670000000000002,67.569999999999993,71.430000000000007,67.230000000000004,67.329999999999998,65.519999999999996,74.019999999999996,61.899999999999999,82,70.709999999999994,71.700000000000003,73.680000000000007,70.129999999999995,57.890000000000001,64.469999999999999,71.739999999999995,81.030000000000001,75,73.329999999999998,82.140000000000001,73.329999999999998,68.829999999999998,73.530000000000001,67.5,59.380000000000003,71.930000000000007,62.670000000000002,72.409999999999997,70.709999999999994,75.959999999999994,70.450000000000003],"y":[61.899999999999999,75,68.180000000000007,60,60,57.140000000000001,60,80,59.090000000000003,69.049999999999997,61.539999999999999,62.5,68.180000000000007,64.290000000000006,75,77.5,64.709999999999994,63.640000000000001,77.780000000000001,42.859999999999999,68.420000000000002,56.100000000000001,68.569999999999993,55,61.109999999999999,64,57.140000000000001,66.670000000000002,71.430000000000007,55.560000000000002,66.670000000000002,66.670000000000002,69.230000000000004,73.680000000000007,70.590000000000003,56.25,77.780000000000001,60,65.519999999999996,66.670000000000002,78.950000000000003,60,70.370000000000005,54.840000000000003,65.219999999999999,65.219999999999999,50,66.670000000000002,66.670000000000002,55.170000000000002,66.670000000000002,66.670000000000002,68.75,77.269999999999996,65.310000000000002,69.390000000000001,60,50,55,66.670000000000002,57.140000000000001,68.290000000000006,61.899999999999999,68.349999999999994,57.140000000000001,58.82,61.899999999999999,61.539999999999999,60.710000000000001,74.290000000000006,63.640000000000001,61.539999999999999,70.829999999999998,50,57.890000000000001,64.290000000000006,83.329999999999998,61.289999999999999,50,64.709999999999994,75.760000000000005,62.5,50,61.899999999999999,67.859999999999999,63.640000000000001,70,83.329999999999998,50,69.230000000000004,76.920000000000002,80,71.049999999999997,65],"z":[14.74,18.739999999999998,16.02,15.56,17.359999999999999,19.98,14.23,17.609999999999999,20.109999999999999,17.84,15.039999999999999,14.23,16.09,18.239999999999998,15.56,16.039999999999999,16.629999999999999,18.550000000000001,19.100000000000001,14.710000000000001,14.470000000000001,16.09,17.460000000000001,20.760000000000002,15.470000000000001,17.850000000000001,15.970000000000001,17.989999999999998,13.529999999999999,17.170000000000002,14.92,14.56,14.5,17.039999999999999,18.710000000000001,19.170000000000002,17.949999999999999,14.08,14.59,18.780000000000001,16.82,18.57,17.57,14.699999999999999,18.600000000000001,14.06,14.83,17.219999999999999,15.140000000000001,20.559999999999999,17.260000000000002,19.100000000000001,19.620000000000001,19.670000000000002,15.890000000000001,16.050000000000001,18.129999999999999,14.82,16.870000000000001,17.440000000000001,18.57,19.510000000000002,16.57,18.309999999999999,17.719999999999999,14.5,19,19.289999999999999,14.390000000000001,16.199999999999999,17.25,15.050000000000001,18.23,13.779999999999999,19.09,16.719999999999999,19.41,19.199999999999999,16.59,16.719999999999999,17.469999999999999,13.6,19.91,15.48,19.93,19.73,14.17,14.09,18.100000000000001,16.699999999999999,18.23,17.239999999999998,18.16,16.34],"mode":"markers","text":["Alba María Redondo Ferrer","Aldrith Ivana Quintero Humphries","Alessia Russo","Alexandra Morgan Carrasco","Alexandra Popp","Ana María Guzmán Zapata","Ana-Maria Crnogorčević","Anna Sandberg","Antionette Oyedupe Payne","Ashleigh Plumptre","Asisat Lamina Oshoala","Athenea del Castillo Belvide","Atlanta Reigan Primus","Avell Chitundu","Bích Thùy Nguyễn Thị","Caitlin Jade Foord","Carina Alicia Baltrip-Reyes","Catarina Amado","Clara Mateo","Cloé Zoé Eyja Lacasse","Cortnee Brooke Vine","Coumba Sow","Damaris Berta Egurrola Wienke","Daniela Alexandra Árias Rojas","Daniela Montoya Quiróz","Drew Spence","Elizabeth Doon Hassett","Emily Louise van Egmond","Eugénie Le Sommer","Eva Maria Navarro","Eva Sofia Jakobsson","Evarine Susan Katongo","Fatima Zahra Tagnaout","Frida Maanum","Ghizlane Chebbak","Hanane Aït El Haj","Hanna Ulrika Bennison","Hannah Wilkinson","Hayley Emma Raso","Hikaru Naomoto","Hildah Tholakele Magaia","Ifeoma Onumonu","Ingrid Filippa Angeldal","Jacqueline Anne Hand","Jonna Ann-Charlotte Andersson","Jordyn Pamela Huitema","Josefine Hasbo","Jéssica da Silva","Kadidiatou Diani","Karen Holmgaard","Kathrine Møller Kühl","Kenza Dali","Kerstin Yasmijn Casparij","Klara Bühl","Kosovare Asllani","Lauren Hemp","Lea Schüller","Lena Lattwein","Lina Yang","Linda Maserame Motlhalo","Lindsey Michelle Horan","Lorena Bedoya Durango","Lucia Di Guglielmo","Lucy Bronze","Lynn Raenie Williams","Madelen Fatimma Maria Janogy","Malia Grace Steinmetz","Margaret Belemu","Mariana Valeria Larroquette","Mary Boio Fowler","Melchie Daëlle Dumornay","Như Huỳnh","Pernille Mosegaard Harder","Priscila Chinchilla","Ria Percival","Rikke Marie Madsen","Roseline Éloissaint","Samantha May Kerr","Sarah Kassi","Schiandra Yael González Jurado","Sel-Gi Jang","Siomala Mapepa","Sjoeke Nüsken","So-Hyun Cho","Sophie Wais Braun","Takako Seike","Telma Raquel Velosa Encarnação","Thị Thanh Nhã Nguyễn","Tiffany Cameron","Trinity Rain Moyer-Rodman","Uchenna Kanu","Vyan Sampson","Yui Hasegawa","Zineb Redouani"],"hovertemplate":["<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}"],"opacity":0.80000000000000004,"marker":{"color":"rgba(245,201,81,1)","size":7,"line":{"color":"rgba(245,201,81,1)"}},"type":"scatter3d","name":"2","textfont":{"color":"rgba(245,201,81,1)"},"error_y":{"color":"rgba(245,201,81,1)"},"error_x":{"color":"rgba(245,201,81,1)"},"line":{"color":"rgba(245,201,81,1)"},"frame":null},{"x":[70.730000000000004,83.329999999999998,86.489999999999995,85.030000000000001,69.230000000000004,80.280000000000001,77.780000000000001,86.489999999999995,80.980000000000004,71.790000000000006,80.769999999999996,75,77.359999999999999,75.680000000000007,75.709999999999994,88.890000000000001,80.950000000000003,82.5,82.090000000000003,79.439999999999998,71.25,74.319999999999993,81.689999999999998,91.180000000000007,75.969999999999999,86.489999999999995,82.269999999999996,82.959999999999994,83.579999999999998,76.920000000000002,75.829999999999998,82.689999999999998,80.430000000000007,84.049999999999997,82.349999999999994,82.349999999999994,77.189999999999998,82.200000000000003,88.890000000000001,80.719999999999999,83.930000000000007,88.790000000000006,78.670000000000002,79.329999999999998,74.510000000000005,87.299999999999997,81.400000000000006,76.959999999999994,76.920000000000002,85.939999999999998,83.769999999999996,75,78.409999999999997,80.290000000000006,71.950000000000003,86.859999999999999,84.379999999999995,86.439999999999998,75.760000000000005,75,87.5,88.540000000000006,87.159999999999997,82.040000000000006,83.829999999999998,79.310000000000002,74.239999999999995,78.670000000000002,78.569999999999993,78.569999999999993,85.290000000000006,81.069999999999993,81.819999999999993,88.489999999999995,76.989999999999995,84.379999999999995,77.609999999999999,72,80.900000000000006,88.370000000000005,88.709999999999994,82.519999999999996,75.409999999999997,86.359999999999999,78.120000000000005,83.400000000000006,94.590000000000003],"y":[83.329999999999998,86.109999999999999,81.480000000000004,78.950000000000003,85.709999999999994,82.140000000000001,83.329999999999998,95.239999999999995,84.620000000000005,81.25,71.430000000000007,78.790000000000006,68.75,76.670000000000002,75,100,75,85.189999999999998,83.329999999999998,75.609999999999999,84.620000000000005,82.349999999999994,85,92.680000000000007,82.760000000000005,76,67.859999999999999,86.840000000000003,82.609999999999999,75.760000000000005,80.599999999999994,80.769999999999996,75,82.980000000000004,80,81.819999999999993,84.620000000000005,69.569999999999993,89.469999999999999,81.25,82.049999999999997,88.730000000000004,72.730000000000004,76.599999999999994,76.670000000000002,83.329999999999998,75,76.319999999999993,79.310000000000002,82.349999999999994,75,80.950000000000003,76.469999999999999,72.730000000000004,82.760000000000005,89.189999999999998,90.319999999999993,70,90,100,88.239999999999995,81,78.849999999999994,79.629999999999995,84.379999999999995,80,73.329999999999998,89.469999999999999,75,84.209999999999994,62.5,80.950000000000003,87.5,78.790000000000006,75.760000000000005,75,81.819999999999993,80,66.670000000000002,91.670000000000002,92.310000000000002,70.590000000000003,88.890000000000001,66.670000000000002,78.569999999999993,84.209999999999994,83.329999999999998],"z":[16.239999999999998,14.67,17.52,14.18,16.329999999999998,15.75,17.550000000000001,15.59,17.199999999999999,13.18,12.960000000000001,17.120000000000001,13.27,14.77,14.01,17.379999999999999,15.18,16.629999999999999,17.379999999999999,16.850000000000001,17.800000000000001,16.170000000000002,13.470000000000001,13.57,17.449999999999999,15.91,17.539999999999999,15.24,13.130000000000001,17.760000000000002,17.84,14.98,17.850000000000001,15.880000000000001,16.379999999999999,16.59,17.829999999999998,17.800000000000001,16.870000000000001,17.199999999999999,14.359999999999999,17.100000000000001,13.859999999999999,13.02,14.800000000000001,14,16.710000000000001,17.039999999999999,16.09,13.279999999999999,14.85,11.83,13.289999999999999,16.050000000000001,14.94,16.600000000000001,15.15,16.140000000000001,17.800000000000001,17.420000000000002,17.039999999999999,16.25,16.350000000000001,17.960000000000001,16.809999999999999,14.800000000000001,13.91,15.529999999999999,12.18,17.25,12.35,14.5,17.41,16.239999999999998,13.24,13.44,15.58,15.109999999999999,13.859999999999999,14.31,17.23,14.77,16.91,17.34,12.02,15.19,14.23],"mode":"markers","text":["Adriana Kristina Leon","Adriana Leal da Silva","Aitana Bonmati Conca","Alexia Putellas Segura","Amalie Jørgensen Vangsgaard","Andreia Alexandra Norton","Annalie Longo","Ariadina Alves Borges","Ashley Elizabeth Marie Lawrence","Beatriz Zaneratto João","Bethany England","Carolina Arias Vidal","Chengshu Wu","Chiara Beccari","Christine Margaret Sinclair","Cristín Yorleny Granados Gómez","Daiana Micaela Falfán","Danielle van de Donk","Dayana Pierre-Louis","Denise O'Sullivan","Diana Carolina Ospina García Pineda","Dolores Isabel Jacome Silva","Débora Cristiane de Oliveira","Ella Toone","Emily Ann Fox","Emma Stina Blackstenius","Eseosa Aigbogun","Estefanía Romina Banini Ruiz","Esther Gonzalez Rodríguez","Francisca Ramos Ribeiro Nazareth Sousa","Fridolina Rolfö","Geum-Min Lee","Hina Sugita","Hinata Miyazawa","Honoka Hayashi","Ibtissam Jraïdi","Indiah-Paige Janita Riley","Ingrid Syrstad Engen","Irene Guerrero Sanmartín","Jaclyn Katrina Demis Sawicki","Jennifer Hermoso Fuentes","Jill Roord","Jody Brown","Johanna Rytting-Kaneryd","Jule Brand","Katja Snoeijs","Laura Coombs","Leicy Maria Santos Herrera","Lieke Martens","Lina Magull","Linda Lizeth Caicedo Alegría","Lineth Beerensteyn","Linyan Zhang","Martha Tembo","María Florencia Bonsegundo","María Francesca Caldentey Oliver","Mayra Tatiana Ramírez Ramírez","Melanie Leupolz","Nadine Riesen","Nicole Anyomi","Olga  Carmona García","Ona Batlle Pascual","Onema Grace Geyoro","Rachel Daly","Ramona Bachmann","Rebecka Blomqvist","Riko Ueki","Romina Stefania Núñez","Rosella Ayane","Rui Zhang","Salma Amani","Salma Paralluelo Ayingono","Sara Caroline Seger","Sara Däbritz","Seraina Piubel","Sheika Daleicha Scott Richardson","Shuang Wang","Signe Kallesøe Bruun","Sinead Farrelly","Sofia Cantore","Svenja Huth","Tatiana Vanessa Ferreira Pinto","Thembi Kgatlana","Thị Hải Linh Trần","Valentina Giacinti","Victoria Pelova","Wieke Hendrikje Maria Kaptein"],"hovertemplate":["<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}"],"opacity":0.80000000000000004,"marker":{"color":"rgba(66,146,246,1)","size":7,"line":{"color":"rgba(66,146,246,1)"}},"type":"scatter3d","name":"3","textfont":{"color":"rgba(66,146,246,1)"},"error_y":{"color":"rgba(66,146,246,1)"},"error_x":{"color":"rgba(66,146,246,1)"},"line":{"color":"rgba(66,146,246,1)"},"frame":null},{"x":[82.180000000000007,69.569999999999993,77.560000000000002,84.930000000000007,84.310000000000002,80.650000000000006,80,83.219999999999999,72.159999999999997,75.829999999999998,85.379999999999995,79.719999999999999,83.840000000000003,95.040000000000006,76.099999999999994,81.129999999999995,95.519999999999996,85.319999999999993,89.290000000000006,84.680000000000007,80.75,89.469999999999999,91.459999999999994,82.579999999999998,86.209999999999994,73.909999999999997,84.849999999999994,89.680000000000007,89.609999999999999,79.260000000000005,85.810000000000002,77.319999999999993,86.670000000000002,74.790000000000006,78.099999999999994,92.209999999999994,76.769999999999996,89.230000000000004,85.280000000000001,85,86.359999999999999,83.870000000000005,86.219999999999999,75.260000000000005,85.510000000000005,81.620000000000005,80.560000000000002,76.599999999999994,78.769999999999996,80.390000000000001,74,76.599999999999994,88,73.329999999999998,82.459999999999994,74.140000000000001,83.060000000000002,76.920000000000002,77.969999999999999,88.790000000000006,84.769999999999996,79.409999999999997,73.469999999999999,82.049999999999997,82.609999999999999,83.450000000000003,77.939999999999998,74.310000000000002,74.670000000000002,88.599999999999994,72.090000000000003,85.579999999999998,83.579999999999998],"y":[85.709999999999994,81.819999999999993,75,87.5,71.430000000000007,79.310000000000002,95,66.670000000000002,84.209999999999994,75.760000000000005,77.780000000000001,74.069999999999993,79.069999999999993,95.829999999999998,70.829999999999998,76.920000000000002,90.480000000000004,84.439999999999998,95.650000000000006,84,78.480000000000004,100,100,76.920000000000002,84.209999999999994,77.780000000000001,66.670000000000002,85.939999999999998,77.549999999999997,76.469999999999999,74.069999999999993,75,81.819999999999993,73.810000000000002,84.620000000000005,88.239999999999995,86.299999999999997,80.879999999999995,81.079999999999998,83.019999999999996,93.019999999999996,70.370000000000005,71.430000000000007,74.069999999999993,77.780000000000001,78.260000000000005,80,72.409999999999997,78.569999999999993,81.25,77.049999999999997,74.189999999999998,87.5,80,80,85.709999999999994,70.969999999999999,85.709999999999994,78.049999999999997,85,80,80,83.329999999999998,78.950000000000003,72.730000000000004,72.5,80,77.780000000000001,70.590000000000003,85.290000000000006,83.329999999999998,75,82.349999999999994],"z":[24.530000000000001,20.539999999999999,20.649999999999999,18.09,21.280000000000001,20.07,19.59,22.550000000000001,18.84,21.579999999999998,22.469999999999999,18.289999999999999,24.93,23.530000000000001,19.66,19.079999999999998,18.25,18.690000000000001,19.510000000000002,19.73,19.609999999999999,20.5,18.649999999999999,18.289999999999999,23.329999999999998,19.289999999999999,18.23,22.510000000000002,18.649999999999999,19.969999999999999,22.030000000000001,20.460000000000001,17.969999999999999,20.030000000000001,21.199999999999999,19.57,21.359999999999999,18.140000000000001,18.870000000000001,21.620000000000001,18.239999999999998,20.41,19.079999999999998,21.5,23.260000000000002,18.93,20.390000000000001,21.34,19.800000000000001,19.57,19.109999999999999,18.879999999999999,21.399999999999999,22.420000000000002,25.879999999999999,18.989999999999998,20.219999999999999,19.84,18.149999999999999,20.739999999999998,18.850000000000001,23.579999999999998,21.579999999999998,23.629999999999999,22.18,20.539999999999999,20.09,20.850000000000001,21.09,20.510000000000002,18.760000000000002,20.440000000000001,24.82],"mode":"markers","text":["Aldana Cometti","Amel Majri","Andi Sullivan","Andreia de Jesus Jacinto","Anja Sønstevold","Aoba Fujino","Arianna Caruso","Carole da Silva Costa","Caroline Graham Hansen","Christy Onyenaturuchi Ucheibe","Clare Hunt","Crystal Alyssia Dunn Soubrier","Dominique Johanna Anna Petrone Janssen","Elena Linari","Eliana Noemí Stábile","Elin Ingrid Johanna Rubensson","Emily Ann Sonnett","Esmee Brugts","Flavia Lorena Benítez","Fuka Nagano","Georgia Stanway","Giada Greggi","Giulia Dragoni","Géraldine Reuteler","Halimatu Ibrahim Ayinde","Hyo-Joo Choo","Hải Yến Phạm","Irene Paredes Hernandez","Jackie Groenen","Jayde Yuk Fun Riviere","Jessica Carter","Jessie Alexandra Fleming","Julia Angela Grosso","Jun Endo","Katherine Maria Alvarado Aguilar","Katie Zelem","Katrina Gorry","Keira Walsh","Kerolin Nicoli Israel Ferraz","Kyra Lillee Cooney-Cross","Lauren James","Lena Oberdorf","Lia Wälti","Lisa Boattin","Louise Quinn","Luana Bertolucci Paixão","Léa Le Garrec","Manuela Giugliano","Manuela Vanegas Cataño","Marta Vieira da Silva Veiga","María Catalina Usme Pineda","Mina Tanaka","Miriam Anahí Mayorga","Olivia Chance","Oluwatosin Blessing Demehin","Raquel Rodriguez","Rebecca Quinn","Refiloe Jane","Risa Shimizu","Ruesha Littlejohn","Sandie Toletti","Savannah Marie DeMelo","Selma Bacha","Seo-Yeon Shim","Shiori Miyake","So-Yun Ji","Sophie Schmidt","Stephanie-Elise Catley","Susan Banda","Teresa Abelleira Dueñas","Thị Vân Dương","Vilde Bøe Risa","Wendie Renard"],"hovertemplate":["<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}"],"opacity":0.80000000000000004,"marker":{"color":"rgba(213,212,198,1)","size":7,"line":{"color":"rgba(213,212,198,1)"}},"type":"scatter3d","name":"4","textfont":{"color":"rgba(213,212,198,1)"},"error_y":{"color":"rgba(213,212,198,1)"},"error_x":{"color":"rgba(213,212,198,1)"},"line":{"color":"rgba(213,212,198,1)"},"frame":null},{"x":[69.840000000000003,66.670000000000002,63.039999999999999,70.670000000000002,72.730000000000004,70.150000000000006,70.239999999999995,71.090000000000003,77.329999999999998,74.390000000000001,69.780000000000001,65.560000000000002,78.950000000000003,56.630000000000003,81.560000000000002,57.140000000000001,62.960000000000001,50,62.299999999999997,63.159999999999997,60.82,80,76.920000000000002,65.879999999999995,58.329999999999998,65.569999999999993,62.859999999999999,67.239999999999995,68.75],"y":[77.780000000000001,50,50,67.5,66.670000000000002,73.329999999999998,63.640000000000001,71.430000000000007,63.640000000000001,58.329999999999998,77.780000000000001,73.680000000000007,42.859999999999999,64.290000000000006,52.780000000000001,40,72.730000000000004,50,75,56.25,72,57.890000000000001,55.560000000000002,56.25,77.780000000000001,50,50,85.709999999999994,40],"z":[24.149999999999999,29.289999999999999,22.5,21.34,24.800000000000001,26.170000000000002,21.73,21.809999999999999,23.52,21.399999999999999,24.440000000000001,23.670000000000002,22.620000000000001,27.719999999999999,24.93,24.77,21.18,24.260000000000002,24.329999999999998,22.52,21.66,24.899999999999999,26.289999999999999,20.760000000000002,20.68,23.699999999999999,24.440000000000001,29.280000000000001,28.27],"mode":"markers","text":["Agness Musase","Aniek Nouwen","Bongeka Gamede","Catherine Joan Bott","Claudia  Zornoza Sánchez","Diana Catarina Ribeiro Gomes","Elodie Nakkach","Guro Reiten","Hali Moriah Candido Long","Jessika Rebecca Macayan Cowart","Katie McCabe","Kholosa Biyana","Lily Agg","Lushomo Mweemba","Naomi Haile Girma","Nesryne El Chad","Nicoline Sørensen","Noko Matlou","Nérilia Mondesir","Racheal Kundananji","Rasheedat Busayo Ajibade","Rebekah Ashley Stott","Rion Ishikawa","Sherly Jeudy","Sofia Nicole Dador Harrison","Thị Diễm My Lê","Tiisetso Makhubela","Wendy Yisbel Natis Bárcenas","Yomira Tibisay Pinzón Ríos"],"hovertemplate":["<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}","<i>%{text}<\/i><br> <b>Pass completion<\/b>: %{x}% <br><b>Pass completion UP<\/b>: %{y}%<br> <b>Mean pass length<\/b>: %{z}"],"opacity":0.80000000000000004,"marker":{"color":"rgba(8,8,8,1)","size":7,"line":{"color":"rgba(8,8,8,1)"}},"type":"scatter3d","name":"5","textfont":{"color":"rgba(8,8,8,1)"},"error_y":{"color":"rgba(8,8,8,1)"},"error_x":{"color":"rgba(8,8,8,1)"},"line":{"color":"rgba(8,8,8,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+<template>Expand</template>
+<button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
+</bslib-tooltip>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="table-highlighting-cluster-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="table-highlighting-cluster-statistics">Table highlighting cluster statistics</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Creating a table</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a clustered statistics df</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>cluster_stats <span class="ot">&lt;-</span> player_stats_clustered <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cluster) <span class="sc">|&gt;</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pass_completion_rate =</span> <span class="fu">round</span>(<span class="fu">median</span>(pass_completion_rate), <span class="dv">2</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">pass_completion_up =</span> <span class="fu">round</span>(<span class="fu">median</span>(pass_completion_up), <span class="dv">2</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">pass_length =</span> <span class="fu">round</span>(<span class="fu">median</span>(mean_pass_length), <span class="dv">2</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a tibble</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>Cluster_tibble <span class="ot">&lt;-</span> cluster_stats <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="fu">md</span>(<span class="st">"**Median passing measures per cluster**"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_footnote</span>(<span class="at">footnote =</span> <span class="fu">md</span>(<span class="st">"*Data provided by StatsBomb*"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">cluster =</span> <span class="st">"Cluster"</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">pass_completion_rate =</span> <span class="st">"Pass completion rate (%)"</span>, </span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">pass_completion_up =</span> <span class="st">"Pass completion rate under pressure (%)"</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">pass_length =</span> <span class="st">"Pass length (meters)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(<span class="at">columns =</span> <span class="fu">c</span>(pass_completion_rate, pass_completion_up, pass_length),</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">fn =</span> scales<span class="sc">::</span><span class="fu">col_numeric</span>(<span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"white"</span>,<span class="st">"#419153"</span>, <span class="st">"darkgreen"</span>), <span class="at">domain =</span> <span class="cn">NULL</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  gtExtras<span class="sc">::</span><span class="fu">gt_theme_espn</span>()</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>Cluster_tibble</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="tliydcgdxh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+#tliydcgdxh table {
+  font-family: Lato, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tliydcgdxh thead, #tliydcgdxh tbody, #tliydcgdxh tfoot, #tliydcgdxh tr, #tliydcgdxh td, #tliydcgdxh th {
+  border-style: none;
+}
+
+#tliydcgdxh p {
+  margin: 0;
+  padding: 0;
+}
+
+#tliydcgdxh .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 3px;
+  border-top-color: #FFFFFF;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tliydcgdxh .gt_title {
+  color: #333333;
+  font-size: 24px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tliydcgdxh .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tliydcgdxh .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tliydcgdxh .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tliydcgdxh .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tliydcgdxh .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tliydcgdxh .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tliydcgdxh .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tliydcgdxh .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tliydcgdxh .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tliydcgdxh .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tliydcgdxh .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tliydcgdxh .gt_row {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #F6F7F7;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tliydcgdxh .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tliydcgdxh .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tliydcgdxh .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tliydcgdxh .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tliydcgdxh .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tliydcgdxh .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tliydcgdxh .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tliydcgdxh .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_striped {
+  background-color: #FAFAFA;
+}
+
+#tliydcgdxh .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tliydcgdxh .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tliydcgdxh .gt_sourcenote {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tliydcgdxh .gt_left {
+  text-align: left;
+}
+
+#tliydcgdxh .gt_center {
+  text-align: center;
+}
+
+#tliydcgdxh .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tliydcgdxh .gt_font_normal {
+  font-weight: normal;
+}
+
+#tliydcgdxh .gt_font_bold {
+  font-weight: bold;
+}
+
+#tliydcgdxh .gt_font_italic {
+  font-style: italic;
+}
+
+#tliydcgdxh .gt_super {
+  font-size: 65%;
+}
+
+#tliydcgdxh .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tliydcgdxh .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tliydcgdxh .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tliydcgdxh .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tliydcgdxh .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tliydcgdxh .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tliydcgdxh .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tliydcgdxh .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tliydcgdxh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border"><strong>Median passing measures per cluster</strong></th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="cluster" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Cluster</th>
+<th id="pass_completion_rate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pass completion rate (%)</th>
+<th id="pass_completion_up" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pass completion rate under pressure (%)</th>
+<th id="pass_length" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Pass length (meters)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_center" headers="cluster">1</td>
+<td class="gt_row gt_right" headers="pass_completion_rate" style="background-color: #FFFFFF; color: #000000">58.82</td>
+<td class="gt_row gt_right" headers="pass_completion_up" style="background-color: #FFFFFF; color: #000000">44.44</td>
+<td class="gt_row gt_right" headers="pass_length" style="background-color: #D9E9DA; color: #000000">16.74</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center gt_striped" headers="cluster">2</td>
+<td class="gt_row gt_right gt_striped" headers="pass_completion_rate" style="background-color: #3D8D4C; color: #FFFFFF">71.72</td>
+<td class="gt_row gt_right gt_striped" headers="pass_completion_up" style="background-color: #3C8C4B; color: #FFFFFF">64.85</td>
+<td class="gt_row gt_right gt_striped" headers="pass_length" style="background-color: #C4DCC6; color: #000000">17.20</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="cluster">3</td>
+<td class="gt_row gt_right" headers="pass_completion_rate" style="background-color: #0D690E; color: #FFFFFF">81.07</td>
+<td class="gt_row gt_right" headers="pass_completion_up" style="background-color: #006400; color: #FFFFFF">81.25</td>
+<td class="gt_row gt_right" headers="pass_length" style="background-color: #FFFFFF; color: #000000">15.91</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center gt_striped" headers="cluster">4</td>
+<td class="gt_row gt_right gt_striped" headers="pass_completion_rate" style="background-color: #006400; color: #FFFFFF">82.46</td>
+<td class="gt_row gt_right gt_striped" headers="pass_completion_up" style="background-color: #086708; color: #FFFFFF">80.00</td>
+<td class="gt_row gt_right gt_striped" headers="pass_length" style="background-color: #3F8F50; color: #FFFFFF">20.22</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="cluster">5</td>
+<td class="gt_row gt_right" headers="pass_completion_rate" style="background-color: #7AB082; color: #000000">67.24</td>
+<td class="gt_row gt_right" headers="pass_completion_up" style="background-color: #3F8F50; color: #FFFFFF">63.64</td>
+<td class="gt_row gt_right" headers="pass_length" style="background-color: #006400; color: #FFFFFF">24.15</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="4" class="gt_footnote"><em>Data provided by StatsBomb</em></td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<section id="cluster-interpretations" class="level4">
+<h4 class="anchored" data-anchor-id="cluster-interpretations">Cluster interpretations</h4>
+<ul>
+<li><strong>Cluster 1</strong>
+<ul>
+<li>Poor passers</li>
+</ul></li>
+<li><strong>Cluster 2</strong>
+<ul>
+<li>Average passers</li>
+</ul></li>
+<li><strong>Cluster 3</strong>
+<ul>
+<li>Accurate short passers</li>
+</ul></li>
+<li><strong>Cluster 4</strong>
+<ul>
+<li>Accurate long passers</li>
+</ul></li>
+<li><strong>Cluster 5</strong>
+<ul>
+<li>Longest passers</li>
+</ul></li>
+</ul>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
