@@ -30,6 +30,8 @@ names(wwc_passes[11:23]) <- c("switch", "aerial_won", "cross", "through_ball",
                               "shot_assist", "outswinging", "straight", "inswinging",
                               "goal_assist", "cut_back", "no_touch", "deflected",
                               "miscommunication")
+wwc_passes <- wwc_passes |> 
+  mutate(team_name = str_remove_all(team_name, " Women's"))
 
 wwc_passes
 wwc_passes[28] <- wwc_passes_3
