@@ -11,6 +11,7 @@ library(factoextra)
 library(ggpubr)
 library(janitor)
 library(plotly)
+library(gtable)
 wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
 theme_set(theme_bw())
 
@@ -435,3 +436,21 @@ wwc_spain_costa_long |>
                                   color = "grey3"),
         legend.title = element_text(face = "bold"))
 
+
+
+# Multiple positions table ------------------------------------------------
+mult_pos <- wwc_passes |> 
+  group_by(player_name, position_name) |> 
+  filter(player_name == "Chloe Kelly") |> 
+  summarize(pass_completion_rate = round((sum(pass_outcome_name == "Complete")/n() * 100), 2)) |> 
+  ungroup()
+
+Kelly_table <- mult_pos |>
+  select(position_name, pass_completion_rate) |> 
+  gt() |>
+  tab_header(title = md("**Chloe Kelly (England) passing completion per position**")) |>
+  cols_label(position_name = "Position name", pass_completion_rate = "Pass completion rate (%)") |> 
+  gtExtras::gt_theme_espn() |> 
+  gtExtras::gt_highlight_rows(rows = seq(1, 7, 2), fill = "#d5d4c6", font_weight = NULL) |> 
+
+Kelly_table  
