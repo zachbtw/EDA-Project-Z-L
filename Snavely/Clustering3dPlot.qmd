@@ -190,12 +190,21 @@ plot_ly(player_stats_clustered,
 ## Table highlighting cluster statistics
 ```{r, warning = FALSE}
 ## Creating a table
+
+# Cluster descriptions
+cluster_descriptions <- c("Poor passers", "Average passers", "Accurate short passers", 
+                         "Accurate long passers", "Longest passers")
+
 # Creating a clustered statistics df
 cluster_stats <- player_stats_clustered |> 
   group_by(cluster) |> 
   summarize(pass_completion_rate = round(median(pass_completion_rate), 2),
          pass_completion_up = round(median(pass_completion_up), 2),
-         pass_length = round(median(mean_pass_length), 2))
+         pass_length = round(median(mean_pass_length), 2)) |>
+  ungroup() |> 
+  mutate(cluster_description = cluster_descriptions) |>
+  select(cluster, cluster_description, pass_completion_rate, pass_completion_up, pass_length)
+  
 
 # Creating a tibble
 Cluster_tibble <- cluster_stats |>
@@ -203,6 +212,7 @@ Cluster_tibble <- cluster_stats |>
   tab_header(title = md("**Median passing measures per cluster**")) |> 
   tab_footnote(footnote = md("*Data provided by StatsBomb*")) |>
   cols_label(cluster = "Cluster",
+             cluster_description = "Description",
              pass_completion_rate = "Pass completion rate (%)", 
              pass_completion_up = "Pass completion rate under pressure (%)",
              pass_length = "Pass length (meters)") |>
@@ -212,17 +222,3 @@ Cluster_tibble <- cluster_stats |>
 
 Cluster_tibble
 ```
-
-
-#### Cluster interpretations
-
-* **Cluster 1**
-  + Poor passers
-* **Cluster 2**
-  + Average passers
-* **Cluster 3**
-  + Accurate short passers
-* **Cluster 4**
-  + Accurate long passers
-* **Cluster 5**
-  + Longest passers

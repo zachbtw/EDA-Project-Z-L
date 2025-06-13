@@ -163,10 +163,10 @@ names(facet_labels) <- c("pass_completion_rate", "pass_completion_up", "pressure
 wwc_PassingChanges_long |> 
   ggplot(aes(x = time_range, y = Val, fill = Stat)) +
   geom_col(alpha = 1) +
-  scale_fill_manual(values = c("#419153", "#d5d4c6", "#4292f6")) +
+  scale_fill_manual(values = c("#419153", "#d5d4c6", "#f5c951")) +
   facet_wrap(~Stat, nrow = 3, scale = "free_y",
              labeller = labeller(Stat = facet_labels)) +
-  labs(title = "Average rates throughout 2023 WWC matches",
+  labs(title = "Passing rates in 2023 WWC games \nfluctuate depending on time of game",
        x = "Time of game (minutes)",
        y = "Rate (%)",
        caption = "Data courtesy of StatsBomb") +
