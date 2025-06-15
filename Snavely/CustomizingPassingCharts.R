@@ -9,6 +9,8 @@ library(ggpubr)
 wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
 
 
+# Data cleaning -----------------------------------------------------------
+
 # Cleaning the names 
 wwc_passes <- wwc_passes |> 
   janitor::clean_names()
@@ -47,7 +49,8 @@ wwc_passes <- wwc_passes |>
   select(game, everything(), -prev_period, -new_game)
 
 
-## Passing charts
+# Passing spreads ---------------------------------------------------------
+
 # Only want passes that are complete, incomplete, or out
 wwc_passes <- wwc_passes |> 
   filter(pass_outcome_name %in% c("Complete", "Incomplete", "Out"))
@@ -163,5 +166,68 @@ three_players |>
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
+
+
+# Spain vs. Costa Rica ----------------------------------------------------
+
+cr_group <- filter(wwc_passes, team_name == "Costa Rica", game %in% c(1, 2, 3)) |>
+  group_by(game) |>
+  mutate(
+    complete_so_far = cumsum(pass_outcome_name == "Complete"),
+    total_so_far = row_number(),
+    completion_pct = complete_so_far / total_so_far,
+    pass_completion_up = round((cumsum(under_pressure == TRUE & pass_outcome_name == "Complete") 
+                                / cumsum(under_pressure == TRUE) * 100), 2),
+    opponent = factor(ifelse(game == 1, "vs. Each Other", ifelse(game == 2, "Japan", "Zambia")),levels = c("Zambia", "Japan", "vs. Each Other"))
+  ) |>
+  ungroup()
+
+spain_group <- filter(wwc_passes, team_name == "Spain", game %in% c(1, 2, 3)) |>
+  group_by(game) |>
+  mutate(
+    complete_so_far = cumsum(pass_outcome_name == "Complete"),
+    total_so_far = row_number(),
+    completion_pct = complete_so_far / total_so_far,
+    pass_completion_up = round((cumsum(under_pressure == TRUE & pass_outcome_name == "Complete") 
+                                / cumsum(under_pressure == TRUE) * 100), 2),
+    opponent = factor(ifelse(game == 1, "vs. Each Other", ifelse(game == 2, "Zambia", "Japan")),levels = c("vs. Each Other", "Japan", "Zambia"))
+  ) |>
+  ungroup()
+
+cr_spain <- rbind(cr_group, spain_group)
+
+cr_group |>
+  ggplot(aes(x = total_so_far, y = completion_pct, color = opponent)) +
+  geom_line()
+
+spain_group |>
+  ggplot(aes(x = total_so_far, y = completion_pct, color = opponent)) +
+  geom_line()
+
+cr_spain |>
+  ggplot(aes(x = total_so_far, y = (completion_pct*100), color = opponent)) +
+  geom_line(linewidth = 0.7) +
+  xlim(20, 800) +
+  ylim(50, 100) +
+  facet_wrap(~team_name, scale = "free_y", nrow = 2) +
+  scale_color_manual("Oponnent", values = c("#7fc47f","#4292f6", "#f5c951")) +
+  labs(title = "Spain (2-0-1) is consistent in passing completion percentage \nthrough group stage compared to Costa Rica (0-3)",
+       caption = "Data courtesy of StatsBomb",
+       y = "Passing completion rate (%)",
+       x = "Number of passes") +
+  theme(plot.title = element_text(size = 20,
+                                  face = "bold",
+                                  hjust = .5),
+        axis.title = element_text(size = 15,
+                                  face = "bold"),
+        legend.title = element_text(size = 15,
+                                    face = "bold"),
+        legend.text = element_text(size = 12),
+        strip.background = element_blank(),
+        strip.text = element_text(face = "italic",
+                                  size = 15),
+        plot.caption = element_text(face = "italic"),
+        axis.text = element_text(size = 10))
+  
 
         
