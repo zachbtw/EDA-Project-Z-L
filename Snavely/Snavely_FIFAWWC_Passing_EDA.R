@@ -311,8 +311,7 @@ wwc_knockout_diff |>
   ggplot(aes(x = time_range, y = pass_completion_rate, fill = knockout_stage)) +
   geom_col(position = "dodge") +
   scale_fill_manual("Knockout Stage?", values = c("#419153", "#f5c951")) +
-  labs(title = "Knockout stage vs. non-knockout stage team mean pass completion rates",
-       subtitle = "Analyzing 2023 Women's World Cup teams",
+  labs(title = "Knockout stage teams maintain better passing completion \npercentages than non-knockout stage teams",
        x = "Time of game (minutes)",
        y = "Pass completion rate (%)",
        caption = "Data courtesy of StatsBomb") +

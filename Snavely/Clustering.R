@@ -16,7 +16,6 @@ theme_set(theme_bw())
 
 # Cleaning Data -----------------------------------------------------------
 
-
 ## Cleaning the data
 # Cleaning the names
 wwc_passes <- wwc_passes |> 
