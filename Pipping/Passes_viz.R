@@ -53,7 +53,7 @@ UNICE |>
     fill = "#7fc47f") +             # Pitch colour+
   geom_segment(aes(color = pass_outcome_name, linetype = under_pressure), size = 0.5, alpha = 0.5) +
   scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow", "hotpink")) +
-  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) 
+  geom_point(aes(x = location_x, y = location_y), color = "gold", size = 0.5) 
 
 filter(spain_passes, game == 1, position_name == "Goalkeeper", pass_outcome_name == "Incomplete")
 table(wwc_passes$pass_outcome_name)
@@ -175,9 +175,11 @@ elena_lanari |>
     dimensions = pitch_statsbomb, #,
     colour = "white",             # Pitch lines
     fill = "#7fc47f") +             # Pitch colour+
-  geom_segment(aes(color = pass_outcome_name, linetype = under_pressure), size = 0.5, alpha = 0.5) +
+  geom_point(data = filter(elena_lanari, pass_shot_assist == TRUE | pass_goal_assist == TRUE), aes(x = pass_end_location_x, y = pass_end_location_y), colour = "gold", size = 5) +
+  geom_segment(aes(color = pass_outcome_name, linetype = under_pressure),
+               arrow = arrow(length = unit(0.2, "cm")), size = 0.7, alpha = 0.5) +
   scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow", "hotpink")) +
-  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) 
+  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5)
 
 wieke_kaptein |>
   ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
@@ -186,9 +188,12 @@ wieke_kaptein |>
     dimensions = pitch_statsbomb, #,
     colour = "white",             # Pitch lines
     fill = "#7fc47f") +             # Pitch colour+
-  geom_segment(aes(color = pass_outcome_name, linetype = under_pressure), size = 0.5, alpha = 0.5) +
-  scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow", "hotpink")) +
-  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) 
+  geom_point(data = filter(wieke_kaptein, pass_shot_assist == TRUE), aes(x = pass_end_location_x, y = pass_end_location_y), colour = "grey", size = 3) +
+  geom_point(data = filter(wieke_kaptein, pass_goal_assist == TRUE), aes(x = pass_end_location_x, y = pass_end_location_y), colour = "gold", size = 5) +
+  geom_segment(aes(color = pass_outcome_name, linetype = under_pressure),
+               arrow = arrow(length = unit(0.2, "cm")), size = 0.7, alpha = 0.5) +
+  scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow", "hotpink")) 
+# + geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5)
 
 rapinah |>
   ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
@@ -197,6 +202,89 @@ rapinah |>
     dimensions = pitch_statsbomb, #,
     colour = "white",             # Pitch lines
     fill = "#7fc47f") +             # Pitch colour+
-  geom_segment(aes(color = pass_outcome_name, linetype = under_pressure), size = 0.5, alpha = 0.5) +
+  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) +
+  geom_point(data = filter(rapinah, pass_shot_assist == TRUE | pass_goal_assist == TRUE), aes(x = pass_end_location_x, y = pass_end_location_y), colour = "gold", size = 5) +
+  geom_segment(aes(color = pass_outcome_name, linetype = under_pressure),
+               arrow = arrow(length = unit(0.2, "cm")), size = 0.7, alpha = 0.5) +
   scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow", "hotpink")) +
-  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) 
+  theme_minimal()
+
+
+KD_passes <- filter(wwc_passes, player_name == "Kadidiatou Diani", pass_outcome_name != "Unknown")
+KD_passes |>
+  ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
+  coord_flip() +
+  annotate_pitch(
+    dimensions = pitch_statsbomb, #,
+    colour = "white",             # Pitch lines
+    fill = "#7fc47f") +             # Pitch colour+
+  geom_point(aes(x = location_x, y = location_y), color = "green", size = 0.5) +
+  geom_point(data = filter(KD_passes, pass_shot_assist == TRUE | pass_goal_assist == TRUE), aes(x = pass_end_location_x, y = pass_end_location_y), colour = "gold", size = 5) +
+  geom_segment(aes(color = pass_outcome_name, linetype = under_pressure),
+               arrow = arrow(length = unit(0.2, "cm")), size = 0.7, alpha = 0.5) +
+  scale_color_manual("Pass Outcome", values = c("blue", "darkred", "yellow", "hotpink")) +
+  theme_minimal()
+
+library(ggplot2)
+filter(KD_passes, pass_end_location_x > 80) |>
+  ggplot(aes(x = pass_end_location_x, y = pass_end_location_y, 
+             z = pass_outcome_name, group = -1)) +
+  stat_summary_hex(binwidth = c(2, 2), fun = mean, 
+                   color = "black") +
+  scale_fill_gradient(low = "midnightblue", 
+                      high = "gold") + 
+  theme(legend.position = "bottom") +
+  coord_fixed()
+
+wwc_passes |>
+  group_by(player_name) |>
+  sum(wwc_passes$pass_goal_assist) |>
+  arrange(descending)
+
+wwc_passes |>
+  group_by(player_name) |>
+  mean(wwc_passes$pass_goal_assist)
+
+c1 <- filter(player_stats_clustered, cluster == 1) |>
+  left_join(wwc_passes |>
+              select(player_name, team_name), by = "player_name") |>
+  unique()
+
+c2 <- filter(player_stats_clustered, cluster == 2) |>
+  left_join(wwc_passes |>
+              select(player_name, team_name), by = "player_name") |>
+  unique()
+
+c3 <- filter(player_stats_clustered, cluster == 3) |>
+  left_join(wwc_passes |>
+              select(player_name, team_name), by = "player_name") |>
+  unique()
+
+c4 <- filter(player_stats_clustered, cluster == 4) |>
+  left_join(wwc_passes |>
+              select(player_name, team_name), by = "player_name") |>
+  unique()
+c5 <- filter(player_stats_clustered, cluster == 5) |>
+  left_join(wwc_passes |>
+              select(player_name, team_name), by = "player_name") |>
+  unique()
+
+table(c1$team_name.x)
+table(c2$team_name.x) 
+table(c3$team_name.x)
+table(c4$team_name.x)
+table(c5$team_name.x)
+
+clusters_w_team <- player_stats_clustered |>
+  left_join(wwc_passes |>
+              select(player_name, team_name), by = "player_name") |>
+  unique() |>
+  select(-"team_name.y")
+  
+clusters_w_team |>
+  filter(team_name.x == "Spain") |>
+  select(player_name, cluster)
+
+wwc_passes_clusters <-
+  wwc_passes |>
+  left_join(player_stats_clustered)
