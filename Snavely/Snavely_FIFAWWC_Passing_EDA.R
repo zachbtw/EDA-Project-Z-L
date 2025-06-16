@@ -151,20 +151,20 @@ wwc_PassingChanges[1:19, ] <- wwc_PassingChanges[c(1, 10, 2:9, 11:19), ]
 
 # Pivot longer to facet
 wwc_PassingChanges_long <- wwc_PassingChanges |> 
-  select(time_range, pass_completion_rate, pass_completion_up, pressure_rate) |> 
+  select(time_range, pass_completion_rate, pressure_rate) |> 
   pivot_longer(pass_completion_rate:pressure_rate,
                names_to = "Stat",
                values_to = "Val")
 
 # Facet label names
-facet_labels <- c("Pass completion", "Pass completion under pressure", "Pressure rate")
-names(facet_labels) <- c("pass_completion_rate", "pass_completion_up", "pressure_rate")
+facet_labels <- c("Pass completion", "Pressure rate")
+names(facet_labels) <- c("pass_completion_rate", "pressure_rate")
 
 # 2 variable graphing
 wwc_PassingChanges_long |> 
   ggplot(aes(x = time_range, y = Val, fill = Stat)) +
   geom_col(alpha = 1) +
-  scale_fill_manual(values = c("#419153", "#d5d4c6", "#f5c951")) +
+  scale_fill_manual(values = c("#419153", "#f5c951")) +
   facet_wrap(~Stat, nrow = 3, scale = "free_y",
              labeller = labeller(Stat = facet_labels)) +
   labs(title = "Passing rates in 2023 WWC games \nfluctuate depending on time of game",
