@@ -6,6 +6,7 @@ library(gganimate)
 library(ggsoccer)
 library(dplyr)
 library(ggpubr)
+library(tidyverse)
 wwc_passes <- read_csv("https://raw.githubusercontent.com/36-SURE/2025/main/data/wwc_passes.csv")
 
 
@@ -96,7 +97,7 @@ irene |>
     dimensions = pitch_statsbomb, #,
     colour = "white",             # Pitch lines
     fill = "#7fc47f") +             # Pitch colour+
-  geom_segment(aes(color = pass_outcome_name, lty = under_pressure), size = 0.7, alpha = 0.7) +
+  geom_segment(aes(color = pass_outcome_name, lty = under_pressure), arrow = arrow(length = unit(0.2, "cm")),size = 0.7, alpha = 0.7) +
   scale_color_manual("Pass Outcome", values = c("#4292f6", "#f5c951", "black")) +
   geom_point(aes(x = location_x, y = location_y), color = "grey2", size = 1, alpha = .9) +
   labs(title = "Wieke Hendrikje Maria Kaptein passing spread",
@@ -120,7 +121,7 @@ rapinah |>
     dimensions = pitch_statsbomb, #,
     colour = "white",             # Pitch lines
     fill = "#7fc47f") +             # Pitch colour+
-  geom_segment(aes(color = pass_outcome_name, lty = under_pressure), size = 0.7, alpha = 0.7) +
+  geom_segment(aes(color = pass_outcome_name, lty = under_pressure),  arrow = arrow(length = unit(0.2, "cm")), size = 0.7, alpha = 0.7) +
   scale_color_manual("Pass Outcome", values = c("#4292f6", "#f5c951", "black")) +
   geom_point(aes(x = location_x, y = location_y), color = "grey2", size = 1, alpha = .9) +
   labs(title = "Megan Anna Rapinoe passing spread",
@@ -137,14 +138,39 @@ rapinah |>
                                      size = 15,
                                      vjust = -4))
 
-# Faceting
-three_players <- rbind(elena_lanari, wieke_kaptein, rapinah) |> 
-  mutate(player_name = ifelse(player_name == "Elena Linari", "Elena Linari\nItalian Right Center Back",
-                              ifelse(player_name == "Wieke Hendrikje Maria Kaptein",
-                                     "Wieke Hendrikje Maria Kaptein\nDutch Left Center Midfielder",
-                                     "Megan Anna Rapinoe\nAmerican Left Winger")))
+### Finding good players in bad systems 
 
-three_players |>
+sheika_scott <- wwc_passes |>
+  filter(player_name == "Sheika Daleicha Scott Richardson")
+
+sheika_scott |>
+ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
+  coord_flip() +
+  annotate_pitch(
+    dimensions = pitch_statsbomb, #,
+    colour = "white",             # Pitch lines
+    fill = "#7fc47f") +             # Pitch colour+
+  geom_segment(aes(color = pass_outcome_name, lty = under_pressure), size = 0.7, alpha = 0.7) +
+  scale_color_manual("Pass Outcome", values = c("#4292f6", "#f5c951", "black")) +
+  geom_point(aes(x = location_x, y = location_y), color = "grey2", size = 1, alpha = .9) +
+  labs(title = "Sheika Scott passing spread",
+       subtitle = "Costa Rican Forward",
+       lty = "Under Pressure?") +
+  theme_void() +
+  theme(plot.title = element_text(face = "bold",
+                                  hjust = .5,
+                                  size = 15,
+                                  vjust = -4),
+        legend.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "italic",
+                                     hjust = .5,
+                                     size = 15,
+                                     vjust = -4))
+
+dayana_pl <- wwc_passes |>
+  filter(player_name == "Dayana Pierre-Louis")
+
+dayana_pl |>
   ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
   coord_flip() +
   annotate_pitch(
@@ -154,7 +180,93 @@ three_players |>
   geom_segment(aes(color = pass_outcome_name, lty = under_pressure), size = 0.7, alpha = 0.7) +
   scale_color_manual("Pass Outcome", values = c("#4292f6", "#f5c951", "black")) +
   geom_point(aes(x = location_x, y = location_y), color = "grey2", size = 1, alpha = .9) +
-  facet_wrap(~ player_name) +
+  labs(title = "Dayana Pierre-Louis passing spread",
+       subtitle = "Haitian Left Defensive Midfielder",
+       lty = "Under Pressure?") +
+  theme_void() +
+  theme(plot.title = element_text(face = "bold",
+                                  hjust = .5,
+                                  size = 15,
+                                  vjust = -4),
+        legend.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "italic",
+                                     hjust = .5,
+                                     size = 15,
+                                     vjust = -4))
+
+haiti_passes <- wwc_passes |>
+  filter(team_name == "Haiti")
+
+haiti_passes |>
+  ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
+  coord_flip() +
+  annotate_pitch(
+    dimensions = pitch_statsbomb, #,
+    colour = "white",             # Pitch lines
+    fill = "#7fc47f") +             # Pitch colour+
+  geom_segment(aes(color = pass_outcome_name, lty = under_pressure), size = 0.7, alpha = 0.4) +
+  scale_color_manual("Pass Outcome", values = c("#4292f6", "#f5c951", "black")) +
+  geom_point(aes(x = location_x, y = location_y), color = "grey2", size = 1, alpha = .9) +
+  labs(title = "Haitian National Team passing spread",
+       subtitle = "Over three group stage games (0-0-3)",
+       lty = "Under Pressure?") +
+  theme_void() +
+  theme(plot.title = element_text(face = "bold",
+                                  hjust = .5,
+                                  size = 15,
+                                  vjust = -4),
+        legend.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "italic",
+                                     hjust = .5,
+                                     size = 15,
+                                     vjust = -4))
+
+## Testing dozens of other players/formations
+explore <- wwc_passes |> 
+  filter(player_name == "María Catalina Usme Pineda")
+
+explore |>
+  ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
+  coord_flip() +
+  annotate_pitch(
+    dimensions = pitch_statsbomb, #,
+    colour = "white",             # Pitch lines
+    fill = "#7fc47f") +             # Pitch colour+
+  geom_segment(aes(color = pass_outcome_name, lty = under_pressure), size = 0.7, alpha = 0.7) +
+  scale_color_manual("Pass Outcome", values = c("#4292f6", "#f5c951", "black")) +
+  geom_point(aes(x = location_x, y = location_y), color = "grey2", size = 1, alpha = .9) +
+  labs(title = "María Pineda passing spread",
+       subtitle = "Colombian Forward",
+       lty = "Under Pressure?") +
+  theme_void() +
+  theme(plot.title = element_text(face = "bold",
+                                  hjust = .5,
+                                  size = 15,
+                                  vjust = -4),
+        legend.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "italic",
+                                     hjust = .5,
+                                     size = 15,
+                                  vjust = -4))
+
+# Faceting
+three_players <- rbind(elena_lanari, wieke_kaptein, rapinah) |> 
+  mutate(player_name = (ifelse(player_name == "Elena Linari", "Elena Linari\nItalian Right Center Back",
+                              ifelse(player_name == "Wieke Hendrikje Maria Kaptein",
+                                     "Wieke Hendrikje Maria Kaptein\nDutch Left Center Midfielder",
+                                     "Megan Anna Rapinoe\nAmerican Left Winger"))))
+
+three_players |>
+  ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
+  coord_flip() +
+  annotate_pitch(
+    dimensions = pitch_statsbomb, #,
+    colour = "white",             # Pitch lines
+    fill = "#7fc47f") +             # Pitch colour+
+  geom_segment(aes(color = pass_outcome_name, lty = under_pressure),  arrow = arrow(length = unit(0.2, "cm")), size = 0.7, alpha = 0.7) +
+  scale_color_manual("Pass Outcome", values = c("#4292f6", "#f5c951", "black")) +
+  geom_point(aes(x = location_x, y = location_y), color = "grey2", size = 1, alpha = .9) +
+  facet_wrap(~ factor(player_name, c("Elena Linari\nItalian Right Center Back", "Wieke Hendrikje Maria Kaptein\nDutch Left Center Midfielder", "Megan Anna Rapinoe\nAmerican Left Winger"))) +
   theme_bw() +
   labs(lty = "Under Pressure?") +
   theme(legend.title = element_text(face = "bold"),
@@ -210,8 +322,8 @@ cr_spain |>
   xlim(20, 800) +
   ylim(50, 100) +
   facet_wrap(~team_name, scale = "free_y", nrow = 2) +
-  scale_color_manual("Oponnent", values = c("#7fc47f","#4292f6", "#f5c951")) +
-  labs(title = "Spain (2-0-1) is consistent in passing completion percentage \nthrough group stage compared to Costa Rica (0-3)",
+  scale_color_manual("Opponent", values = c("#7fc47f","#4292f6", "#f5c951")) +
+  labs(title = "Spain (2-0-1) is consistent in passing completion percentage \nthrough group stage compared to Costa Rica (0-0-3)",
        caption = "Data courtesy of StatsBomb",
        y = "Passing completion rate (%)",
        x = "Number of passes") +

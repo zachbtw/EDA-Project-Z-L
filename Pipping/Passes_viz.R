@@ -1,4 +1,4 @@
-
+library(tidyverse)
 library(ggplot2)
 # install.packages("gganimate")
 # install.packages("ggsoccer")
@@ -6,6 +6,7 @@ library(ggplot2)
 library(gganimate)
 library(ggsoccer)
 library(dplyr)
+library(gt)
 
 wwc_passes <- wwc_passes %>%
   group_by(team_name) |>
@@ -210,6 +211,7 @@ rapinah |>
   theme_minimal()
 
 
+
 KD_passes <- filter(wwc_passes, player_name == "Kadidiatou Diani", pass_outcome_name != "Unknown")
 KD_passes |>
   ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
@@ -283,8 +285,77 @@ clusters_w_team <- player_stats_clustered |>
   
 clusters_w_team |>
   filter(team_name.x == "Spain") |>
+  select(player_name, cluster) |>
+  count(cluster) |>
+  mutate(proportion = round(n/sum(n), 2)) |>
+  gt() |>
+  tab_header(title = md("**Spanish National Team Cluster Composition**")) |>
+  tab_footnote(footnote = md("*Data provided by StatsBomb*")) |>
+  cols_label(cluster = "Cluster",
+             n = "Number of Players",
+             proportion = "Proportion of Clustered Players") |>
+  gtExtras::gt_theme_espn() |>
+  gtExtras::gt_highlight_rows(rows = seq(1, 4, 2), fill = "#f5c951", font_weight = NULL) |>
+  gtsave(file = "Spain_comp.png")
+
+clusters_w_team |>
+  filter(team_name.x == "England") |>
+  select(player_name, cluster) |>
+  count(cluster) |>
+  mutate(proportion = round(n/sum(n), 2)) |>
+  gt() |>
+  tab_header(title = md("**English National Team Cluster Composition**")) |>
+  tab_footnote(footnote = md("*Data provided by StatsBomb*")) |>
+  cols_label(cluster = "Cluster",
+             n = "Number of Players",
+             proportion = "Proportion of Clustered Players") |>
+  gtExtras::gt_theme_espn() |>
+  gtExtras::gt_highlight_rows(rows = seq(1, 4, 2), fill = "#4292f6", font_weight = NULL) |>
+  gtsave(file = "England_comp.png")
+
+
+clusters_w_team |>
+  filter(team_name.x == "Italy") |>
+  select(player_name, cluster) |>
+  count(cluster) |>
+  mutate(proportion = round(n/sum(n), 2)) |>
+  gt() |>
+  tab_header(title = md("**Italian National Team Cluster Composition**")) |>
+  tab_footnote(footnote = md("*Data provided by StatsBomb*")) |>
+  cols_label(cluster = "Cluster",
+             n = "Number of Players",
+             proportion = "Proportion of Clustered Players") |>
+  gtExtras::gt_theme_espn() |>
+  gtExtras::gt_highlight_rows(rows = seq(1, 4, 2), fill = "#419153", font_weight = NULL) |>
+  gtsave(file = "Italy_comp.png")
+
+clusters_w_team |>
+  filter(team_name.x == "Morocco") |>
+  select(player_name, cluster) |>
+  count(cluster) |>
+  mutate(proportion = round(n/sum(n), 2)) |>
+  gt() |>
+  tab_header(title = md("**Moroccan National Team Cluster Composition**")) |>
+  tab_footnote(footnote = md("*Data provided by StatsBomb*")) |>
+  cols_label(cluster = "Cluster",
+             n = "Number of Players",
+             proportion = "Proportion of Clustered Players") |>
+  gtExtras::gt_theme_espn() |>
+  gtExtras::gt_highlight_rows(rows = seq(1, 4, 2), fill = "#C1272D", font_weight = NULL) |>
+  gtsave(file = "Morocco_comp.png")
+
+clusters_w_team |>
+  filter(team_name.x == "Spain") |>
   select(player_name, cluster)
+
+clusters_w_team |>
+  filter(team_name.x == "England") |>
+  select(player_name, cluster) |>
 
 wwc_passes_clusters <-
   wwc_passes |>
-  left_join(player_stats_clustered)
+  left_join(player_stats_clustered |>
+              select(player_name, cluster), by = "player_name") |>
+  unique()
+
+

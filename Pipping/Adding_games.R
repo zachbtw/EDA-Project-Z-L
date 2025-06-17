@@ -124,5 +124,5 @@ game1 |>
   ggplot(aes(x = total_so_far, y = completion_pct, color = team_name)) +
   geom_line() 
 
-eng_passes <- filter(wwc_passes, team_name == "England Women's")
+eng_passes <- filter(wwc_passes, team_name == "England")
 
