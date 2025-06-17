@@ -181,3 +181,15 @@ Cluster_tibble <- cluster_stats |>
   gtsave(file = "Cluster_table.png")
 
 Cluster_tibble
+
+# Table for number of players in each cluster
+player_stats_clustered |> 
+  count(cluster) |>
+  gt() |> 
+  tab_header(title = md("**Number of players per cluster**")) |> 
+  tab_footnote(footnote = md("*Data provided by StatsBomb*")) |>
+  cols_label(cluster = "Cluster",
+             n = "Number of players") |> 
+  gtExtras::gt_theme_espn() |> 
+  gtExtras::gt_highlight_rows(rows = seq(1, 5, 2), fill = "#d5d4c6", font_weight = NULL) |> 
+  gtsave(file = "Cluster_numbers.png")

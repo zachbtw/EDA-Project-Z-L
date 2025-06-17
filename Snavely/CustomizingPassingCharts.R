@@ -59,8 +59,8 @@ wwc_passes <- wwc_passes |>
 elena_lanari <- wwc_passes |>
   filter(player_name == "Elena Linari")
 
-wieke_kaptein <- wwc_passes |>
-  filter(player_name == 	"Wieke Hendrikje Maria Kaptein")
+irene <- wwc_passes |>
+  filter(player_name == 	"Irene Guerrero Sanmartín")
 
 rapinah <- wwc_passes |>
   filter(player_name == "Megan Anna Rapinoe")
@@ -89,7 +89,7 @@ elena_lanari |>
                                      size = 15,
                                      vjust = -4))
 
-wieke_kaptein |>
+irene |>
   ggplot(aes(x = location_x, y = location_y, xend = pass_end_location_x, yend = pass_end_location_y, colour = pass_outcome_name)) +
   coord_flip() +
   annotate_pitch(
