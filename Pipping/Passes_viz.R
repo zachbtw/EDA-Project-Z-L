@@ -120,6 +120,80 @@ spain_group <- filter(wwc_passes, team_name == "Spain", game %in% c(1, 2, 3)) |>
     opponent = factor(ifelse(game == 1, "vs. Each Other", ifelse(game == 2, "Zambia", "Japan")),levels = c("vs. Each Other", "Japan", "Zambia"))
   ) |>
   ungroup()
+
+spain_ko <- filter(wwc_passes, team_name == "Spain", game %in% c(4, 5, 6, 7)) |>
+  group_by(game) |>
+  mutate(
+    complete_so_far = cumsum(pass_outcome_name == "Complete"),
+    total_so_far = row_number(),
+    completion_pct = complete_so_far / total_so_far,
+    pass_completion_up = round((cumsum(under_pressure == TRUE & pass_outcome_name == "Complete") 
+                                / cumsum(under_pressure == TRUE) * 100), 2),
+    opponent = factor(ifelse(game == 4, "Switzerland (Ro16)", ifelse(game == 5, "Netherlands (QF)", ifelse(game == 6, "Sweden (SF)","England (F)"))),levels = c("Switzerland (Ro16)", "Netherlands (QF)", "Sweden (SF)", "England (F)"))
+  ) |>
+  ungroup()
+
+spain_ko |>
+  ggplot(aes(x = total_so_far, y = (completion_pct*100), color = opponent)) +
+  geom_line(linewidth = 0.7) +
+  xlim(20, 800) +
+  ylim(50, 100) +
+  scale_color_manual("Opponent", values = c("#DA291C","#1E4785", "#FECC02", "darkgreen")) +
+  labs(title = "Spanish National Team Passing 
+  Performance in Knockout Stages",
+       caption = "Data courtesy of StatsBomb",
+       y = "Passing completion rate (%)",
+       x = "Number of passes") +
+  theme(plot.title = element_text(size = 18,
+                                  face = "bold",
+                                  hjust = .5),
+        axis.title = element_text(size = 15,
+                                  face = "bold"),
+        legend.title = element_text(size = 15,
+                                    face = "bold"),
+        legend.text = element_text(size = 10),
+        strip.background = element_blank(),
+        strip.text = element_text(face = "italic",
+                                  size = 15),
+        plot.caption = element_text(face = "italic"),
+        axis.text = element_text(size = 10))
+
+eng_ko <- filter(wwc_passes, team_name == "England", game %in% c(4, 5, 6, 7)) |>
+  group_by(game) |>
+  mutate(
+    complete_so_far = cumsum(pass_outcome_name == "Complete"),
+    total_so_far = row_number(),
+    completion_pct = complete_so_far / total_so_far,
+    pass_completion_up = round((cumsum(under_pressure == TRUE & pass_outcome_name == "Complete") 
+                                / cumsum(under_pressure == TRUE) * 100), 2),
+    opponent = factor(ifelse(game == 4, "Nigeria (Ro16)", ifelse(game == 5, "Colombia (QF)", ifelse(game == 6, "Australia (SF)","Spain (F)"))),levels = c("Nigeria (Ro16)", "Colombia (QF)", "Australia (SF)", "Spain (F)"))
+  ) |>
+  ungroup()
+eng_ko |>
+  ggplot(aes(x = total_so_far, y = (completion_pct*100), color = opponent)) +
+  geom_line(linewidth = 0.7) +
+  xlim(20, 800) +
+  ylim(50, 100) +
+  scale_color_manual("Opponent", values = c("#DA291C","#1E4785", "#FECC02", "darkgreen")) +
+  labs(title = "English National Team Passing 
+  Performance in Knockout Stages",
+       caption = "Data courtesy of StatsBomb",
+       y = "Passing completion rate (%)",
+       x = "Number of passes") +
+  theme(plot.title = element_text(size = 18,
+                                  face = "bold",
+                                  hjust = .5),
+        axis.title = element_text(size = 15,
+                                  face = "bold"),
+        legend.title = element_text(size = 15,
+                                    face = "bold"),
+        legend.text = element_text(size = 10),
+        strip.background = element_blank(),
+        strip.text = element_text(face = "italic",
+                                  size = 15),
+        plot.caption = element_text(face = "italic"),
+        axis.text = element_text(size = 10))
+
 cr_spain <- 
   rbind(cr_group, spain_group)
 cr_group |>
